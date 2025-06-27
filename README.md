@@ -1,11 +1,11 @@
 # msgFlow-AutoMsgFlow
-___
+
 **msgFlow** is a message automation system built on the Event → Condition → Action (ECA) pattern.
 It allows users to define custom workflows that automatically trigger actions when specific events occur and conditions
 are satisfied.
 
 ### 🏢 Built for Business
-___
+
 **msgFlow** is designed specifically for companies and teams that rely on messaging platforms in their daily workflows.
 It helps automate routine interactions with messengers, allowing businesses to save time, reduce human error, and
 maintain consistent communication across channels.
@@ -14,7 +14,7 @@ Whether it’s handling customer support inquiries, routing internal alerts, or 
 **msgFlow** lets you build scalable, event-driven automations without writing boilerplate logic each time.
 
 ### 📄 Business Scenario: Smart Routing of Client Messages
-___
+
 Imagine a company receives a high volume of incoming messages from clients through messengers like Telegram or Slack.
 Some messages are about technical issues, others are related to billing, and some are just general inquiries.
 
@@ -28,7 +28,7 @@ At the same time, the client receives an automated reply like:
 "Thanks! Your request has been forwarded to our billing department. We’ll get back to you shortly."
 
 **Result:**
-___
+
 - The client gets an instant response.
 - The message is routed to the right team without delay.
 - No manual sorting is needed by staff. 
