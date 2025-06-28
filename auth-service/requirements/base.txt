@@ -1,7 +1,0 @@
-fastapi[standard]
-uvicorn
-
-sqlalchemy
-asyncpg
-psycopg2
-pydantic
