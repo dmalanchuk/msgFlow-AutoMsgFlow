@@ -7,4 +7,4 @@ auth_router = APIRouter(
 
 @auth_router.post("/")
 async def auth():
-    return {"message": "Hello World"}
+    return {"message": "Hello World!"}
