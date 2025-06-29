@@ -9,6 +9,7 @@ class Settings(BaseSettings):
 
     """All url for services"""
     AUTH_SERVICE_URL: str = "http://auth_service:8000"
+    INTERACTION_SERVICE_URL: str = ""
 
     class Config:
         env_file = ".env"
