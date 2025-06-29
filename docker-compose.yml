@@ -1,0 +1,14 @@
+services:
+  auth_service:
+    build: ./auth_service
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
+
+  api_gateway:
+    build: ./api_gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - auth_service
+    restart: unless-stopped
