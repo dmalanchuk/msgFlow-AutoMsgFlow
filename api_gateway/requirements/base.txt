@@ -2,5 +2,6 @@ fastapi[standard]
 uvicorn
 
 pydantic
+pydantic-settings
 
 aio-pika
