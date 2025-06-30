@@ -1,5 +1,5 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from auth_service.src.database import Base
+from sqlalchemy.orm import Mapped, mapped_column
+from src.database import Base
 
 class UserModel(Base):
     __tablename__ = "users"

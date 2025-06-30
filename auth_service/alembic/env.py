@@ -7,7 +7,9 @@ from alembic import context
 
 import os
 from dotenv import load_dotenv
-from auth_service.src.database import Base
+from src.database import Base
+from src.models import users_model  # змінити на твій реальний шлях
+
 
 load_dotenv()
 
