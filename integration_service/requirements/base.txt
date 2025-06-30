@@ -5,3 +5,4 @@ pydantic
 pydantic-settings
 
 sqlalchemy
+aiogram
