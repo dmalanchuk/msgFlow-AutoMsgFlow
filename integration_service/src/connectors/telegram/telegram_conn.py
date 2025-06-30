@@ -1,28 +1,31 @@
-from integration_service.src.config import settings
+from integration_service.src.rabbitmq.rabbit_producer import publish_to_scenario
 import httpx
+from fastapi import APIRouter, Request
 
-BOT_TOKEN = settings.TELEGRAM_TOKEN
-BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
+KEYWORDS = ["замовлення"]  # потом вставляти з бд
 
-
-async def send_message(chat_id: id, message: str):
-    url = f"{BASE_URL}/sendMessage"
-    params = {"chat_id": chat_id, "text": message}
-
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, params=params)
-
-        return response.json()
+router = APIRouter()
 
 
-async def get_updates(offset: int = None):
-    url = f"{BASE_URL}/getUpdates"
-    params = {"timeout": 100}
+@router.post("/webhook/telegram")
+async def telegram_webhook(request: Request):
+    data = await request.json()
 
-    if offset is not None:
-        params["offset"] = offset
+    message = data.get("message")
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, params=params)
+    if not message:
+        return {"status": "No message"}
 
-        return response.json()
+    text = message.get("text", "")
+    chat_id = message["chat"]["id"]
+    username = message["from"].get("username", "")
+
+    if any(keyword in text.lower() for keyword in KEYWORDS):
+        await publish_to_scenario({
+            "source": "telegram",
+            "chat_id": chat_id,
+            "username": username,
+            "text": text
+        })
+
+    return {"status": "ok"}
