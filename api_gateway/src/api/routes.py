@@ -11,3 +11,9 @@ router = APIRouter()
 async def auth_proxy(path: str, request: Request):
     url = f"{settings.AUTH_SERVICE_URL}/{path}"
     return await proxy_request(request, url)
+
+
+@router.api_route("/integration{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
+async def auth_proxy(path: str, request: Request):
+    url = f"{settings.INTERACTION_SERVICE_URL}/{path}"
+    return await proxy_request(request, url)
