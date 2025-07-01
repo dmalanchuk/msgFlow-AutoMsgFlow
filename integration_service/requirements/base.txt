@@ -4,7 +4,12 @@ uvicorn
 pydantic
 pydantic-settings
 
+alembic
 sqlalchemy
+
 aiogram
 
 faststream
+
+psycopg2
+asyncpg
