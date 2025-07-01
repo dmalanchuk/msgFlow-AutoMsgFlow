@@ -1,0 +1,9 @@
+fastapi[standard]
+uvicorn
+
+pydantic
+pydantic-settings
+
+sqlalchemy
+
+faststream
