@@ -2,7 +2,7 @@ fastapi[standard]
 uvicorn
 
 pydantic
-pydantic_settings
+pydantic-settings
 
 alembic
 sqlalchemy
