@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     RABBITMQ_URL: str
     QUEUE_NAME: str
 
+    DATABASE_URL: str
+
     class Config:
         env_file = ".env"
 
