@@ -6,3 +6,5 @@ pydantic-settings
 
 sqlalchemy
 aiogram
+
+faststream
