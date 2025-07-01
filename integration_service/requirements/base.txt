@@ -8,6 +8,7 @@ alembic
 sqlalchemy
 
 aiogram
+aio-pika
 
 faststream
 
