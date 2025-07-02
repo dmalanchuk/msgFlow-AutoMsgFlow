@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.api import scenario_api
+from src.api.scenario_api import router
 
 app = FastAPI()
-app.include_router(scenario_api.scenario_router, tags=["scenarios"])
+app.include_router(router, tags=["scenarios"])
