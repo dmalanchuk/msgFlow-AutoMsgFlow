@@ -11,3 +11,5 @@ faststream
 
 psycopg2
 asyncpg
+
+greenlet
