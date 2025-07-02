@@ -1,4 +1,5 @@
-from faststream.rabbit.fastapi import RabbitRouter
-from src.config import settings
+from fastapi import APIRouter
+from src.connections.telegram import telegram_integration
 
-router = RabbitRouter(settings.RABBITMQ_URL)
+router = APIRouter()
+router.include_router(telegram_integration.router, prefix="/webhook", tags=["Telegram"])

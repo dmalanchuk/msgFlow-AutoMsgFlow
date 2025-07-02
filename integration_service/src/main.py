@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.connections.telegram.telegram_integration import router as telegram_router
+from src.routes.router import router
 
-app = FastAPI()
-app.include_router(telegram_router, tags=["telegram"])
+app = FastAPI(title="Integration Service")
+app.include_router(router)
