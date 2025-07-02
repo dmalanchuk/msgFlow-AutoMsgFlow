@@ -56,9 +56,9 @@ class Action(BaseModel):
 
 
 class ScenarioCreate(BaseModel):
-    event_type: EventInfo
+    event: EventInfo
     condition: Condition
     action: Action
 
     class Config:
-        orm_mode = True
+        from_attributes = True
