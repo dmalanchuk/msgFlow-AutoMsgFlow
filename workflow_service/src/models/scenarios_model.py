@@ -8,6 +8,18 @@ class ScenariosModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # owner_id: Mapped[int] = mapped_column(nullable=False)
-    event_type: Mapped[str] = mapped_column(nullable=False)
-    conditions: Mapped[dict] = mapped_column(JSON, nullable=False)
-    actions: Mapped[dict] = mapped_column(JSON, nullable=False)
+    event: Mapped[dict] = mapped_column(
+        JSON,
+        nullable=False,
+        doc="JSON structure: { 'type': str, 'source': str }"
+    )
+    conditions: Mapped[dict] = mapped_column(
+        JSON,
+        nullable=False,
+        doc="JSON structure: { 'type': str, 'params': dict }"
+    )
+    actions: Mapped[dict] = mapped_column(
+        JSON,
+        nullable=False,
+        doc="JSON structure: { 'type': str, 'params': dict }"
+    )
