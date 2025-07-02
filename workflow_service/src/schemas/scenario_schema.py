@@ -56,6 +56,7 @@ class Action(BaseModel):
 
 
 class ScenarioCreate(BaseModel):
+    name: str
     event: EventInfo
     condition: Condition
     action: Action

@@ -11,6 +11,7 @@ class ScenarioService:
     @staticmethod
     async def create_scenario(session: AsyncSession, scenario: ScenarioCreate):
         new_scenario = ScenariosModel(
+            name=scenario.name,
             event=scenario.event.model_dump(),
             conditions=scenario.condition.model_dump(),
             actions=scenario.action.model_dump()
