@@ -1,18 +1,31 @@
 from fastapi import Request
 
 from faststream.rabbit.fastapi import RabbitRouter
-from src.services.event_builder import EventBuilder
+from src.rabbitmq.publisher import publish_to_queue
 
 router = RabbitRouter()
 
 
-@router.post("/webhook/telegram")
+@router.post("/telegram")
 async def telegram_webhook(request: Request):
     body = await request.json()
-    event = EventBuilder.build_event_from_telegram(body)
+    message = body.get("message")
 
-    if event:
-        await router.broker.publish(event, queue="incoming.events")
-        return {"status": f"Event {event['event_type']} sent"}
+    if not message:
+        return {"status": "no message"}
 
-    return {"status": "Unsupported event"}
+    chat = message.get("chat", {})
+    from_user = message.get("from", {})
+    text = message.get("text")
+
+    if chat.get("type") in ["group", "supergroup"] and text:
+        payload = {
+            "text": text,
+            "chat_id": chat.get("id"),
+            "username": from_user.get("username"),
+            "source": "telegram"
+        }
+        await publish_to_queue(payload)
+        return {"status": "ok"}
+
+    return {"status": "ignored"}
