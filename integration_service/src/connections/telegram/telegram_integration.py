@@ -1,14 +1,14 @@
-from fastapi import Request
+from fastapi import Request, APIRouter
 
-from faststream.rabbit.fastapi import RabbitRouter
 from src.rabbitmq.publisher import publish_to_queue
 
-router = RabbitRouter()
+router = APIRouter()
 
 
 @router.post("/telegram")
 async def telegram_webhook(request: Request):
     body = await request.json()
+
     message = body.get("message")
 
     if not message:
@@ -18,7 +18,7 @@ async def telegram_webhook(request: Request):
     from_user = message.get("from", {})
     text = message.get("text")
 
-    if chat.get("type") in ["group", "supergroup"] and text:
+    if text:
         payload = {
             "text": text,
             "chat_id": chat.get("id"),
