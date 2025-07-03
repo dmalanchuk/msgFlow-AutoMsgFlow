@@ -6,3 +6,5 @@ asyncpg
 psycopg2
 pydantic
 pydantic-settings
+passlib
+bcrypt==4.1.0
