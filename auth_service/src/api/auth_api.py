@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
@@ -9,11 +9,6 @@ from src.services.reg_service import RegServices
 auth_router = APIRouter(
     prefix="/auth",
 )
-
-
-@auth_router.post("/")
-async def auth():
-    return {"message": "Hello World!"}
 
 @auth_router.post("/register")
 async def register_user(
