@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from api_gateway.src.api import routes
-from config import settings
+from api_gateway.src.config import settings
 
 app = FastAPI(
     title=settings.SERVICE_NAME
