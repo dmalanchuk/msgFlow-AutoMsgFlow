@@ -5,25 +5,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.users_model import UserModel
 from src.schemas.user_schema import CreateUser
 
-class regUser:
+class RegUser:
 
 
-    @classmethod
-    async def get_by_email(cls, email: EmailStr, session: AsyncSession):
+    @staticmethod
+    async def get_by_email(email: EmailStr, session: AsyncSession):
 
         result = await session.execute(
             select(UserModel).where(UserModel.email == email)
         )
         return result.scalars().first()
 
-    @classmethod
-    async def create_user(cls, data: CreateUser, session: AsyncSession):
+    @staticmethod
+    async def create_user(user: UserModel, session: AsyncSession):
 
-        new_user = UserModel(**data)
-
-        session.add(new_user)
+        # new_user = UserModel(**data.dict())
+        session.add(user)
         await session.commit()
-        await session.refresh(new_user)
+        await session.refresh(user)
 
-        return new_user
+        return user
 
