@@ -1,15 +1,17 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 import httpx
 from src.config import settings
 
+"""    
+    Chat ID can only be pulled from public groups or channels, 
+    from private channels is not yet available
+"""
+
 
 class GetChatIdService:
-
     BOT_TOKEN = settings.TELEGRAM_TOKEN
 
     @staticmethod
-    async def get_chat_id(session: AsyncSession, chat_url: str):
+    async def get_chat_id(chat_url: str):
         if chat_url.startswith("https://t.me/"):
             chat_url = chat_url.replace("https://t.me/", "@")
 
