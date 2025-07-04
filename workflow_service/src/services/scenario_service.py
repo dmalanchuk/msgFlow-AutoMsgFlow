@@ -25,7 +25,7 @@ class ScenarioService:
 
         new_scenario = ScenariosModel(
             name=scenario.name,
-            chat_id=str(chat_id),
+            chat_id=chat_id,
             event=scenario.event.model_dump(),
             conditions=scenario.condition.model_dump(),
             actions=scenario.action.model_dump()
