@@ -5,6 +5,11 @@ from src.schemas.scenario_schema import ScenarioCreate
 
 from src.repositories.scenario_repo import ScenarioRepo
 
+"""
+    Business logic service for processing, creating, 
+    storing scenarios of actions according to the ECA pattern
+"""
+
 
 class ScenarioService:
 
