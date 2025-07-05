@@ -8,4 +8,8 @@ pydantic
 pydantic-settings
 passlib
 bcrypt==4.1.0
+<<<<<<< HEAD
 python-jose
+=======
+python-jose
+>>>>>>> fa3be3c (update)
