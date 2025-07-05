@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int
 
     class Config:
-        env_file = "src/.env"
+        env_file = ".env"
 
 
 settings = Settings()
