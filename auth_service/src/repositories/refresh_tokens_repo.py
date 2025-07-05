@@ -26,7 +26,7 @@ class RefreshTokenRepo:
         token = LoginTokens(
             user_id=user_id,
             refresh_token=refresh_token,
-            is_active=False,
+            is_active=True,
             created_at=naive_now,
             expires_at=naive_exp
         )
