@@ -88,8 +88,5 @@ class RefreshTokenRepo:
         if not token or token.is_active or token.expires_at < now:
             raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
-<<<<<<< HEAD
+
         return token
-=======
-        return token
->>>>>>> fa3be3c (update)

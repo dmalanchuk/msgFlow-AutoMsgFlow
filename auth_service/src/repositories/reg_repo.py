@@ -24,9 +24,5 @@ class RegUser:
         await session.commit()
         await session.refresh(user)
 
-<<<<<<< HEAD
-        return user
 
-=======
         return user
->>>>>>> fa3be3c (update)

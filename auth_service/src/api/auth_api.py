@@ -38,8 +38,4 @@ async def logout_user(request: Request, response: Response, session: AsyncSessio
         raise HTTPException(status_code=401, detail="Refresh token required")
 
     await RefreshTokenRepo.deactivate_refresh_token(refresh_token, response, session)
-<<<<<<< HEAD
     return {"detail": "Successfully logout"}
-=======
-    return {"detail": "Successfully logout"}
->>>>>>> fa3be3c (update)
