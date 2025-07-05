@@ -4,16 +4,13 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+from src.config import settings
 
-import os
-from dotenv import load_dotenv
 from src.database import Base
 from src.models import users_model  # змінити на твій реальний шлях
 
 
-load_dotenv()
-
-ASYNC_DATABASE_URL = os.getenv("DATABASE_URL")
+ASYNC_DATABASE_URL = settings.DATABASE_URL
 if ASYNC_DATABASE_URL is None:
     raise Exception("DATABASE_URL not found in .env")
 
