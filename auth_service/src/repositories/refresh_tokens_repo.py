@@ -55,6 +55,23 @@ class RefreshTokenRepo:
         response.delete_cookie("refresh_token")
 
     @staticmethod
+    async def deactivate_refresh_token(refresh_token: str, response: Response, session: AsyncSession):
+
+        if not refresh_token:
+            raise HTTPException(status_code=401, detail="Refresh token required")
+
+        stmt = (
+            update(LoginTokens)
+            .where(LoginTokens.refresh_token == refresh_token)
+            .values(is_active=False)
+        )
+
+        await session.execute(stmt)
+        await session.commit()
+
+        response.delete_cookie("refresh_token")
+
+    @staticmethod
     async def get_token(refresh_token: str, session: AsyncSession):
 
         result = await session.execute(
