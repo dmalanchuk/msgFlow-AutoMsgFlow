@@ -27,5 +27,5 @@ async def telegram_webhook(request: Request):
         }
         await publish_to_queue(payload)
         return {"status": "ok"}
-
-    return {"status": "ignored"}
+    else:
+        return {"status": "ignored"}
