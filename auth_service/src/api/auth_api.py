@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, Body, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated
-
 from starlette.requests import Request
 from starlette.responses import Response
-
 from src.repositories.refresh_tokens_repo import RefreshTokenRepo
 from src.schemas.user_schema import CreateUser, LoginUser
 from src.database import get_session
+from src.services.get_profile_service import GetProfileService
 from src.services.login_service import LoginService
+from src.services.logout_service import LogoutService
 from src.services.reg_service import RegServices
+
 
 auth_router = APIRouter(
     prefix="/auth",
@@ -17,25 +17,28 @@ auth_router = APIRouter(
 
 @auth_router.post("/register")
 async def register_user(
-    data: Annotated[CreateUser, Depends()],
+    data: CreateUser = Body(...),
     session: AsyncSession = Depends(get_session)
 ):
     return await RegServices.reg_user_service(data, session)
 
 @auth_router.post("/login")
 async def login_user(
-    data: Annotated[LoginUser, Depends()],
+
     response: Response,
+    data: LoginUser = Body(...),
     session: AsyncSession = Depends(get_session)
 ):
     return await LoginService.login_user_service(data, response, session)
 
 @auth_router.post("/logout")
 async def logout_user(request: Request, response: Response, session: AsyncSession = Depends(get_session)):
-    refresh_token = request.cookies.get("refresh_token")
+    return await LogoutService.logout_service(request, response, session)
 
-    if not refresh_token:
-        raise HTTPException(status_code=401, detail="Refresh token required")
+@auth_router.get("/profile")
+async def get_profile(
+    request: Request,
+    session: AsyncSession = Depends(get_session)
+):
+    return await GetProfileService.get_profile_service(request, session)
 
-    await RefreshTokenRepo.deactivate_refresh_token(refresh_token, response, session)
-    return {"detail": "Successfully logout"}

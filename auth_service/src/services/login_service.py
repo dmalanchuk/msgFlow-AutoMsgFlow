@@ -1,3 +1,4 @@
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import Response
 
 from src.core.login_tokens import create_access_token, create_refresh_token
@@ -12,7 +13,7 @@ REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
 class LoginService:
 
     @staticmethod
-    async def login_user_service(data: LoginUser, response: Response, session):
+    async def login_user_service(data: LoginUser, response: Response, session: AsyncSession):
         user = await LoginRepo.login_user_repo(data.email, data.password, session)
 
         access_token = create_access_token(data={"sub": data.email})
