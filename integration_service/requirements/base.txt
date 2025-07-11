@@ -4,13 +4,7 @@ uvicorn
 pydantic
 pydantic-settings
 
-alembic
-sqlalchemy
-
 aiogram
 aio-pika
 
 faststream
-
-psycopg2
-asyncpg
