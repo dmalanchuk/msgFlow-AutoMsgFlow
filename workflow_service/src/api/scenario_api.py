@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Annotated
 
 from src.database import get_session
 from src.services.scenario_service import ScenarioService
@@ -27,7 +28,7 @@ async def get_conditions_metadata():
 
 @router.post("/create")
 async def create_scenario(
-        data: ScenarioCreate,
+        data: Annotated[ScenarioCreate, Depends()],
         session: AsyncSession = Depends(get_session)
 ):
     return await ScenarioService.create_scenario(session, data)
