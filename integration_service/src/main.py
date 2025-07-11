@@ -5,7 +5,7 @@ from src.rabbitmq.publisher import broker
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     await broker.connect()
     yield
     await broker.disconnect()
