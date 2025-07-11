@@ -7,6 +7,9 @@ class Settings(BaseSettings):
 
     RABBITMQ_URL: str
     QUEUE_NAME: str
+    ACTION_QUEUE_NAME: str
+
+    REDIS_URL: str
 
     class Config:
         env_file = ".env"
