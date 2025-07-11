@@ -8,7 +8,7 @@ pydantic-settings
 alembic
 sqlalchemy
 
-faststream
+faststream[rabbit]
 
 psycopg2-binary
 asyncpg
