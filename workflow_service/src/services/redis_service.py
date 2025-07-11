@@ -9,6 +9,7 @@ class ServiceRedis:
         key = f"chat:{chat_id}:messages"
         message = json.dumps({"chat_id": chat_id, "text": text})
         await redis.rpush(key, message)
+        await redis.expire(key, 86400)
 
     @staticmethod
     async def get_messages(chat_id: int, limit: int = 10):
