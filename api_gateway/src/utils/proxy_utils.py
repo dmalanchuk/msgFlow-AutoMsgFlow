@@ -7,11 +7,18 @@ async def proxy_request(request: Request, url: str) -> Response:
 
     body = await request.body()
 
+    # Копіюємо заголовки
+    headers = dict(request.headers)
+
+    user_email = getattr(request.state, "user_email", None)
+    if user_email:
+        headers["X-User-Email"] = user_email
+
     async with httpx.AsyncClient() as client:
         proxy_response = await client.request(
             method=request.method,
             url=url,
-            headers=dict(request.headers),
+            headers=headers,
             content=body,
             params=request.query_params
         )
