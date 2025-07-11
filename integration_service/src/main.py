@@ -1,5 +1,15 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from src.routes.router import router
+from src.rabbitmq.publisher import broker
 
-app = FastAPI(title="Integration Service")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    await broker.connect()
+    yield
+    await broker.disconnect()
+
+
+app = FastAPI(title="Integration Service", lifespan=lifespan)
 app.include_router(router)

@@ -1,6 +1,6 @@
 from src.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import JSON
+from sqlalchemy import JSON, BigInteger
 
 
 class ScenariosModel(Base):
@@ -8,6 +8,7 @@ class ScenariosModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     # owner_id: Mapped[int] = mapped_column(nullable=False)
+    chat_id: Mapped[int] = mapped_column(BigInteger, nullable=True, default=None)
     name: Mapped[str] = mapped_column(nullable=False)
     event: Mapped[dict] = mapped_column(
         JSON,

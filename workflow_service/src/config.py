@@ -5,6 +5,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     TELEGRAM_TOKEN: str
 
+    RABBITMQ_URL: str
+    QUEUE_NAME: str
+    ACTION_QUEUE_NAME: str
+
+    REDIS_URL: str
+
     class Config:
         env_file = ".env"
 
