@@ -10,5 +10,18 @@ from sqlalchemy import select, and_
 class ConditionActionRepo:
 
     @staticmethod
-    async def get_condition(data: ConditionAction, session: AsyncSession, mode: Literal["condition", "action"]):
-        ...
+    async def get_mode_c_or_a(data: ConditionAction, session: AsyncSession, mode: Literal["conditions", "actions"]):
+        field_name = "conditions" if mode == "condition" else "actions"
+        field = getattr(ScenariosModel, field_name)
+
+        query = await session.execute(
+            select(ScenariosModel).where(
+                and_(
+                    ScenariosModel.chat_id == data.chat_id,
+                    field['type'].astext.astext == data.type,
+                    field['params'].astext == data.params
+                )
+            )
+        )
+
+        return query.scalars().all()
