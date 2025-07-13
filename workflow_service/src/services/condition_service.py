@@ -1,2 +1,2 @@
-class Conditions:
+class ConditionService:
     ...

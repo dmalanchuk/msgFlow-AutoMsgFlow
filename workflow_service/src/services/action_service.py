@@ -1,2 +1,2 @@
-class Actions:
+class ActionService:
     ...
