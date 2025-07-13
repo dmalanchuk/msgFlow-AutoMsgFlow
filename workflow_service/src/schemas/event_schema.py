@@ -3,6 +3,6 @@ from pydantic import BaseModel
 
 class Event(BaseModel):
     source: str
-    type: str
-    text: str
+    event_type: str
     chat_id: int
+    text: str
