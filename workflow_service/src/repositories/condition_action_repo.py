@@ -8,6 +8,9 @@ from sqlalchemy import select, and_
 
 
 class ConditionActionRepo:
+    """
+        query in table scenarios by condition or action type and params
+    """
 
     @staticmethod
     async def get_by_mode(data: ConditionAction, session: AsyncSession, mode: Literal["conditions", "actions"]):
