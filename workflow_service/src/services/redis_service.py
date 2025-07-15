@@ -12,7 +12,7 @@ class ServiceRedis:
         await redis.expire(key, 86400)
 
     @staticmethod
-    async def get_messages(chat_id: int, limit: int = 10):
+    async def get_last_messages(chat_id: int, limit: int = 1):
         key = f"chat:{chat_id}:messages"
         messages = await redis.lrange(key, -limit, -1)
         return [json.loads(m) for m in messages]
