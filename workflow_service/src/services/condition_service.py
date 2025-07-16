@@ -20,11 +20,11 @@ class ConditionService:
             return {"msg": "no messages in chat"}
 
         last_message = messages[0]
-        text = last_message["text", ""].lower()
+        text = last_message("text", "").lower()
 
         for scenario in scenarios:
             condition = scenario.conditions
-            expected_word = condition["contains_word"]
+            expected_word = condition.get("contains_word")
 
             # write actions service
             if expected_word and expected_word.lower() in text:
