@@ -13,25 +13,17 @@ class ConditionActionRepo:
     """
 
     @staticmethod
-    async def get_by_mode(data: ConditionAction, session: AsyncSession, mode: Literal["conditions", "actions"]):
+    async def get_by_mode(chat_id: int, data: ConditionAction, session: AsyncSession,
+                          mode: Literal["conditions", "actions"]):
         field = getattr(ScenariosModel, mode)
 
         query = await session.execute(
             select(ScenariosModel).where(
                 and_(
-                    field['type'].astext == data.type,
-                    field['params'].astext == data.params
+                    ScenariosModel.chat_id == chat_id,
+                    field["type"].astext == data.type,
+                    field["params"].astext == data.params
                 )
-            )
-        )
-
-        return query.scalars().all()
-
-    @staticmethod
-    async def get_scenario_by_chat_id(chat_id: int, session: AsyncSession):
-        query = await session.execute(
-            select(ScenariosModel).where(
-                ScenariosModel.chat_id == chat_id
             )
         )
 
