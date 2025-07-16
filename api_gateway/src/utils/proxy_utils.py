@@ -2,8 +2,10 @@ from fastapi import Request, Response
 import httpx
 
 
+
 async def proxy_request(request: Request, url: str) -> Response:
     """General query proxy func to target url"""
+
 
     body = await request.body()
 
@@ -14,6 +16,7 @@ async def proxy_request(request: Request, url: str) -> Response:
     if user_email:
         headers["X-User-Email"] = user_email
 
+    print(f"[GATEWAY] Proxying request to: {url}, with X-User-Email: {user_email}")
     async with httpx.AsyncClient() as client:
         proxy_response = await client.request(
             method=request.method,
