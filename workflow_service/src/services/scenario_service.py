@@ -16,7 +16,7 @@ from src.services.get_chat_id_service import GetChatIdService
 class ScenarioService:
 
     @staticmethod
-    async def create_scenario(session: AsyncSession, scenario: ScenarioCreate):
+    async def create_scenario(session: AsyncSession, scenario: ScenarioCreate, owner_email: str):
 
         try:
             chat_id = await GetChatIdService.get_chat_id(scenario.chat_url)
@@ -25,10 +25,13 @@ class ScenarioService:
 
         new_scenario = ScenariosModel(
             name=scenario.name,
+            owner_email=owner_email,
             chat_id=chat_id,
             event=scenario.event.model_dump(),
             conditions=scenario.condition.model_dump(),
             actions=scenario.action.model_dump()
+
         )
+
 
         return await ScenarioRepo.create_scenario(session, new_scenario)

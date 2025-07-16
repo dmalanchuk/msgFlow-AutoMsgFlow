@@ -57,6 +57,7 @@ class Action(BaseModel):
 
 class ScenarioCreate(BaseModel):
     name: str
+    # owner_email: str
     chat_url: str
     event: EventInfo
     condition: Condition

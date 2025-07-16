@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import Request
+from src.database import get_session
+
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
 
@@ -32,3 +35,17 @@ async def create_scenario(
         session: AsyncSession = Depends(get_session)
 ):
     return await ScenarioService.create_scenario(session, data)
+
+@router.post("/scenarios")
+async def create_scenario(
+        request: Request,
+        scenario_data: ScenarioCreate,
+        session: AsyncSession = Depends(get_session)
+):
+    # Отримуємо email з request.state
+    user_email = request.state.user_email if hasattr(request.state, "user_email") else request.headers.get("x-user-email")
+
+    if not user_email:
+        raise HTTPException(status_code=401, detail="User email not found")
+
+    return await ScenarioService.create_scenario(session, scenario_data, owner_email=user_email)
