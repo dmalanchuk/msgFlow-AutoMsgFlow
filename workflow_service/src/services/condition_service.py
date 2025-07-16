@@ -6,7 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class ConditionService:
-    """the text is taken from Redis and checked for a condition"""
+    """
+        the text is taken from Redis and checked for a condition,
+        if it is found, the action is executed. Contains word condition.
+    """
 
     @staticmethod
     async def condition_contains_word(chat_id: int, data: ConditionAction, session: AsyncSession):
