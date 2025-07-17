@@ -24,6 +24,20 @@ async def auth_proxy_with_body(
     url = f"{settings.AUTH_SERVICE_URL}/auth/{path}"
     return await proxy_request(request, url)
 
+@router.get("/scenarios/{path:path}")
+async def scenarios_proxy_get(path: str, request: Request):
+    url = f"{settings.WORKFLOW_SERVICE_URL}/scenarios/{path}"
+    return await proxy_request(request, url)
+
+@router.post("/scenarios/{path:path}")
+async def scenarios_proxy_post(
+    path: str,
+    request: Request,
+    json_body: Optional[dict] = Body(default=None)
+):
+    url = f"{settings.WORKFLOW_SERVICE_URL}/scenarios/{path}"
+    return await proxy_request(request, url)
+
 #integrations
 @router.api_route("/integration{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
 async def auth_proxy(path: str, request: Request):
