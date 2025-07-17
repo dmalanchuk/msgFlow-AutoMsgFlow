@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemas.condition_action_schema import ConditionAction
-from src.rabbitmq.publish_action import publish_action
+from src.rabbitmq.subscriber import publish_action
 from src.repositories.condition_action_repo import ConditionActionRepo
 
 """
