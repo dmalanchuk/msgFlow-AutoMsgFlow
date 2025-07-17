@@ -27,24 +27,12 @@ async def get_conditions_metadata():
     return CONDITIONS_METADATA
 
 
-"""Create scenario"""
-
-
-@router.post("/create")
-async def create_scenario(
-        data: Annotated[ScenarioCreate, Depends()],
-        session: AsyncSession = Depends(get_session)
-):
-    return await ScenarioService.create_scenario(session, data)
-
 """Call this router in api_gateway"""
 
-@router.post("/scenarios")
+@router.post("/create")
 async def create_scenario(
         request: Request,
         data: ScenarioCreate,
         session: AsyncSession = Depends(get_session)
 ):
-    user_email = ScenarioGetEmailService.get_user_email(request)
-
-    return await ScenarioService.create_scenario(session, data, owner_email=user_email)
+    return await ScenarioService.create_scenario(session, data, request)
