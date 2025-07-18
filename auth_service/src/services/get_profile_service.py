@@ -4,7 +4,8 @@ from starlette.requests import Request
 from src.repositories.user_repo import UserRepo
 from src.models.users_model import UserModel
 
-class GetProfileService():
+
+class GetProfileService:
     @staticmethod
     async def get_profile_service(request: Request, session: AsyncSession):
 

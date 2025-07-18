@@ -17,7 +17,5 @@ class RegServices:
             raise HTTPException(status_code=409, detail="User is already registered!!")
 
         data.password = hash_password(data.password)
-        new_user_model = UserModel(**data.model_dump()) #n
-        return await RegUser.create_user(new_user_model, session) #n
-        # new_user = await RegUser.create_user(data, session)
-        # return new_user
+        new_user_model = UserModel(**data.model_dump())
+        return await RegUser.create_user(new_user_model, session)
