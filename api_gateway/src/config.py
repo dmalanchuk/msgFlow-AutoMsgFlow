@@ -8,10 +8,9 @@ class Settings(BaseSettings):
     SERVICE_PORT: int = 8000
 
     """All url for services"""
-    # AUTH_SERVICE_URL: str = "http://auth_service:8000"
     AUTH_SERVICE_URL: str = "http://127.0.0.1:8001"
     WORKFLOW_SERVICE_URL: str = "http://localhost:8002"
-    INTERACTION_SERVICE_URL: str = ""
+    INTERACTION_SERVICE_URL: str = "http://localhost:8003"
 
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
