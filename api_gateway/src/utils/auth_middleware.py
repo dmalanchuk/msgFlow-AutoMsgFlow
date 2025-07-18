@@ -7,6 +7,7 @@ from src.config import settings  # SECRET_KEY та ALGORITHM
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = settings.JWT_ALGORITHM  # наприклад, "HS256"
 
+
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
@@ -16,6 +17,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             "/openapi.json",
             "/auth/login",
             "/auth/register",
+            "/scenarios/create",
         ]
         if any(path.startswith(open_path) for open_path in open_paths):
             return await call_next(request)
