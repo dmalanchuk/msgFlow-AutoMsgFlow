@@ -29,6 +29,7 @@ async def get_conditions_metadata():
 
 """Call this router in api_gateway"""
 
+
 @router.post("/create")
 async def create_scenario(
         request: Request,

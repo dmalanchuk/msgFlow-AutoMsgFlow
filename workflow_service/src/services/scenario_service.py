@@ -35,5 +35,4 @@ class ScenarioService:
 
         )
 
-
         return await ScenarioRepo.create_scenario(session, new_scenario)
