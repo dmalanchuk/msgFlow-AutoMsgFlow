@@ -7,7 +7,6 @@ from fastapi import HTTPException, Response
 from src.models.login_tokens_model import LoginTokens
 from src.config import settings
 
-
 REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
 
 
@@ -18,7 +17,6 @@ class RefreshTokenRepo:
 
         aware_now = datetime.now(timezone.utc)
         expires_at = aware_now + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
-
 
         naive_now = aware_now.replace(tzinfo=None)
         naive_exp = expires_at.replace(tzinfo=None)
@@ -50,7 +48,6 @@ class RefreshTokenRepo:
 
         await session.execute(stmt)
         await session.commit()
-
 
         response.delete_cookie("refresh_token")
 
@@ -87,6 +84,5 @@ class RefreshTokenRepo:
 
         if not token or token.is_active or token.expires_at < now:
             raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
-
 
         return token
