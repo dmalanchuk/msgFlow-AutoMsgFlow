@@ -12,5 +12,5 @@ class ConditionService:
     """
 
     @staticmethod
-    async def condition_contains_word(chat_id: int, data: ConditionAction, session: AsyncSession):
+    async def receive_condition_from_scenario():
         ...

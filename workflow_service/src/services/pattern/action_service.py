@@ -13,5 +13,5 @@ from src.repositories.condition_action_repo import ConditionActionRepo
 class ActionService:
 
     @staticmethod
-    async def send_action_from_scenario(scenario):
+    async def send_action_from_scenario():
         ...
