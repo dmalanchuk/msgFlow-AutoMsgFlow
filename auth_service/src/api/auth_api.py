@@ -25,7 +25,6 @@ async def register_user(
 
 @auth_router.post("/login")
 async def login_user(
-
         response: Response,
         data: LoginUser = Body(...),
         session: AsyncSession = Depends(get_session)

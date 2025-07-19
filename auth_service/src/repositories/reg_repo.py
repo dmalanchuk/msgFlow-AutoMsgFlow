@@ -3,7 +3,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.users_model import UserModel
-from src.schemas.user_schema import CreateUser
 
 
 class RegUser:
