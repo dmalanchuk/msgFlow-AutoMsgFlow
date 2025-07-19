@@ -2,10 +2,10 @@ from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from jose import jwt, JWTError
 
-from src.config import settings  # SECRET_KEY та ALGORITHM
+from src.config import settings
 
 SECRET_KEY = settings.JWT_SECRET_KEY
-ALGORITHM = settings.JWT_ALGORITHM  # наприклад, "HS256"
+ALGORITHM = settings.JWT_ALGORITHM
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -17,7 +17,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
             "/openapi.json",
             "/auth/login",
             "/auth/register",
-            "/scenarios/create",
         ]
         if any(path.startswith(open_path) for open_path in open_paths):
             return await call_next(request)
