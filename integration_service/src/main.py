@@ -7,8 +7,9 @@ from src.rabbitmq.publisher import broker
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     await broker.connect()
+    await broker.start()
     yield
-    await broker.disconnect()
+    await broker.close()
 
 
 app = FastAPI(title="Integration Service", lifespan=lifespan)
