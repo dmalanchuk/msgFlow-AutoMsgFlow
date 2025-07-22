@@ -23,7 +23,6 @@ async def telegram_webhook(request: Request):
         "raw": body
     }
 
-    # додаткові поля для конкретних типів
     if update_type == "message":
         payload["text"] = body["message"].get("text")
 
