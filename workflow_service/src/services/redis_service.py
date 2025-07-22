@@ -12,9 +12,16 @@ class ServiceRedis:
         await redis.expire(key, 500)  # 86400
 
     @staticmethod
-    async def save_message(chat_id: int, text: str):
+    async def save_message(chat_id: int, text: str, msg_id: int, source: str, event_type: str):
         key = f"chat:{chat_id}:messages"
-        await redis.rpush(key, json.dumps({"text": text}))
+        await redis.rpush(key, json.dumps(
+            {
+                "source": source,
+                "event_type": event_type,
+                "text": text,
+                "message_id": msg_id
+            }
+        ))
         await redis.expire(key, 500)  # 86400
 
     """get last updates and messages"""
