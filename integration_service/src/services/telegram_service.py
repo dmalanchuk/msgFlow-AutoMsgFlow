@@ -1,9 +1,11 @@
 from typing import Any
+from src.decorators import timer
 
 
 class TelegramService:
 
     @staticmethod
+    @timer
     async def get_update_type(update: dict[str, Any]) -> str:
         for key in [
             "message",
