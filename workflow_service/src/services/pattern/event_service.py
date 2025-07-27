@@ -1,9 +1,11 @@
 from src.services.redis_service import ServiceRedis
+from src.decorators import timer
 
 
 class EventService:
 
     @staticmethod
+    @timer
     async def check_event(chat_id: int):
         updates = await ServiceRedis.get_last_updates(chat_id, limit=1)
 
