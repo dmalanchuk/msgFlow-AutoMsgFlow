@@ -10,9 +10,7 @@ class ServiceRedis:
     @timer
     async def save_update(chat_id: int, update: dict):
         key = f"chat:{chat_id}:updates"
-        await redis.rpush(key, json.dumps({
-            "event_type": list(update)[1]
-        }))
+        await redis.rpush(key, json.dumps(update))
         await redis.expire(key, 500)  # 86400
 
     @staticmethod
