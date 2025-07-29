@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.services.redis_service import ServiceRedis
 from src.services.pattern.event_service import EventService
 from src.services.pattern.condition_service import ConditionService
+from src.services.pattern.action_service import ActionService
 from src.database import get_session
 
 router_debug = APIRouter(prefix="/debug")
@@ -32,3 +33,8 @@ async def is_event_matched(chat_id: int, session: AsyncSession = Depends(get_ses
 @router_debug.get("/chat/{chat_id}/conditions")
 async def check_conditions(chat_id: int, session: AsyncSession = Depends(get_session)):
     return await ConditionService.check_conditions(chat_id, session)
+
+
+@router_debug.get("/chat/{chat_id}/actions")
+async def send_actions(chat_id: int, session: AsyncSession = Depends(get_session)):
+    return await ActionService.send_action_from_scenario(chat_id, session)
