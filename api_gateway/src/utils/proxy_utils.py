@@ -2,10 +2,8 @@ from fastapi import Request, Response
 import httpx
 
 
-
 async def proxy_request(request: Request, url: str) -> Response:
     """General query proxy func to target url"""
-
 
     body = await request.body()
 

@@ -3,9 +3,10 @@ uvicorn
 
 sqlalchemy
 asyncpg
-psycopg2
+psycopg2-binary
 pydantic
 pydantic-settings
 passlib
-bcrypt==4.1.0
+bcrypt==4.1.2
 python-jose
+greenlet

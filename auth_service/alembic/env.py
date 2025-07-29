@@ -7,7 +7,7 @@ from alembic import context
 from src.config import settings
 
 from src.database import Base
-from src.models import user_model  # змінити на твій реальний шлях
+from src.models import users_model
 
 
 ASYNC_DATABASE_URL = settings.DATABASE_URL

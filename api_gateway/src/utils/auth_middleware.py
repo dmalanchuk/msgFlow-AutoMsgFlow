@@ -2,10 +2,11 @@ from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 from jose import jwt, JWTError
 
-from src.config import settings  # SECRET_KEY та ALGORITHM
+from src.config import settings
 
 SECRET_KEY = settings.JWT_SECRET_KEY
-ALGORITHM = settings.JWT_ALGORITHM  # наприклад, "HS256"
+ALGORITHM = settings.JWT_ALGORITHM
+
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):

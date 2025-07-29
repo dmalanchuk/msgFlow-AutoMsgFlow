@@ -5,10 +5,9 @@ from starlette.responses import Response
 from src.repositories.refresh_tokens_repo import RefreshTokenRepo
 
 
-class LogoutService():
+class LogoutService:
     @staticmethod
     async def logout_service(request: Request, response: Response, session: AsyncSession):
-
         refresh_token = request.cookies.get("refresh_token")
 
         if not refresh_token:
