@@ -1,8 +1,7 @@
 from src.models.scenarios_model import ScenariosModel
-from src.schemas.event_schema import Event
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select
 
 
 class ScenarioRepo:
