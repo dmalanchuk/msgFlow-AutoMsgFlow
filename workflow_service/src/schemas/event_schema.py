@@ -1,8 +1,7 @@
 from pydantic import BaseModel
+from src.enums.event_enum import EventType
 
 
 class Event(BaseModel):
-    source: str
-    event_type: str
+    event_type: EventType
     chat_id: int
-    text: str
