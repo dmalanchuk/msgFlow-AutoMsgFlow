@@ -1,9 +1,9 @@
 services:
-#  auth_service:
-#    build: ./auth_service
-#    ports:
-#      - "8001:8000"
-#    restart: unless-stopped
+  auth_service:
+    build: ./auth_service
+    ports:
+      - "8001:8000"
+    restart: unless-stopped
 
   integration_service:
     build: ./integration_service
@@ -11,11 +11,18 @@ services:
       - "8002:8000"
     restart: unless-stopped
 
+  workflow_service:
+    build: ./workflow_service
+    ports:
+      - "8003:8000"
+    restart: unless-stopped
+
   api_gateway:
     build: ./api_gateway
     ports:
-      - "80:80"
+      - "8000:8000"
     depends_on:
-#      - auth_service
+      - auth_service
       - integration_service
+      - workflow_service
     restart: unless-stopped
