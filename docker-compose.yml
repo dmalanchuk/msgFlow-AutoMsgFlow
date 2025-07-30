@@ -1,23 +1,27 @@
 services:
   auth_service:
+    container_name: auth_service_container
     build: ./auth_service
     ports:
       - "8001:8000"
     restart: unless-stopped
 
   integration_service:
+    container_name: integration_service_container
     build: ./integration_service
     ports:
       - "8002:8000"
     restart: unless-stopped
 
   workflow_service:
+    container_name: workflow_service_container
     build: ./workflow_service
     ports:
       - "8003:8000"
     restart: unless-stopped
 
   api_gateway:
+    container_name: api_gateway_container
     build: ./api_gateway
     ports:
       - "8000:8000"
@@ -25,4 +29,31 @@ services:
       - auth_service
       - integration_service
       - workflow_service
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_integration_proxy
+    command: http integration_service:8000
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+      NGROK_EDGE: worthy-civet-smart.ngrok-free.app
     restart: unless-stopped
