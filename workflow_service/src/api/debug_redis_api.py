@@ -27,7 +27,7 @@ async def get_chat_event(chat_id: int):
 
 @router_debug.get("/chat/{chat_id}/event/matched")
 async def is_event_matched(chat_id: int, session: AsyncSession = Depends(get_session)):
-    return await ConditionService.is_event_matched(chat_id, session)
+    return await EventService.is_event_matched(chat_id, session)
 
 
 @router_debug.get("/chat/{chat_id}/conditions")
