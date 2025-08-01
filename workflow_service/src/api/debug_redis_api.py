@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services.redis_service import ServiceRedis
-from src.services.pattern.event_service import EventService
-from src.services.pattern.condition_service import ConditionService
 from src.services.pattern.action_service import ActionService
 from src.database import get_session
+
+from src.dependency import condition_service, event_service
 
 router_debug = APIRouter(prefix="/debug")
 
@@ -22,17 +22,17 @@ async def get_chat_updates(chat_id: int, limit: int = 10):
 
 @router_debug.get("/chat/{chat_id}/event")
 async def get_chat_event(chat_id: int):
-    return await EventService.check_event(chat_id)
+    return await event_service.check_event(chat_id)
 
 
 @router_debug.get("/chat/{chat_id}/event/matched")
 async def is_event_matched(chat_id: int, session: AsyncSession = Depends(get_session)):
-    return await ConditionService.is_event_matched(chat_id, session)
+    return await event_service.is_event_matched(chat_id, session)
 
 
 @router_debug.get("/chat/{chat_id}/conditions")
 async def check_conditions(chat_id: int, session: AsyncSession = Depends(get_session)):
-    return await ConditionService.check_conditions(chat_id, session)
+    return await condition_service.check_conditions(chat_id, session)
 
 
 @router_debug.get("/chat/{chat_id}/actions")

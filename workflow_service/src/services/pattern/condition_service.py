@@ -1,4 +1,5 @@
 from src.repositories.scenario_repo import ScenarioRepo
+from src.services.scenario_service import ScenarioService
 from src.services.pattern.event_service import EventService
 from src.services.redis_service import ServiceRedis
 
@@ -6,30 +7,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class ConditionService:
+    def __init__(
+            self,
+            redis_service: ServiceRedis,
+            event_service: EventService,
+            scenario_repo: ScenarioRepo,
+            scenario_service: ScenarioService,
+    ):
+        self.redis_service = redis_service
+        self.event_service = event_service
+        self.scenario_repo = scenario_repo
+        self.scenario_service = scenario_service
 
-    @staticmethod
-    async def is_event_matched(chat_id: int, session: AsyncSession) -> bool:
-        result = await ScenarioRepo.get_scenario(chat_id, session)
-        event = await EventService.check_event(chat_id)
+    async def check_conditions(
+            self,
+            chat_id: int,
+            session: AsyncSession
+    ) -> bool:
+        """in params used dependency injection"""
 
-        if not event:
-            return False
-
-        incoming_event_type = event.get("event_type")
-        if not incoming_event_type:
-            return False
-
-        for scenario in result:
-            if scenario.event["type"] == incoming_event_type:
-                return True
-
-        return False
-
-    @staticmethod
-    async def check_conditions(chat_id: int, session: AsyncSession) -> bool:
-        conditions = await ScenarioRepo.get_scenario(chat_id, session)
-        result = await ConditionService.is_event_matched(chat_id, session)
-        text = await ServiceRedis.get_last_messages(chat_id)
+        conditions = await self.scenario_service.get_scenarios(chat_id, session)
+        result = await self.event_service.is_event_matched(chat_id, session)
+        text = await self.redis_service.get_last_messages(chat_id)
 
         last_message = text[0]
 
@@ -39,5 +38,3 @@ class ConditionService:
                     return True
 
         return False
-
-

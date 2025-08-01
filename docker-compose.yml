@@ -1,33 +1,33 @@
 services:
 
-  redis:
-    image: redis:7
-    container_name: redis_container
-    ports:
-      - "6379:6379"
-    restart: unless-stopped
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq_container
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    restart: unless-stopped
-
-  ngrok:
-    image: ngrok/ngrok:latest
-    container_name: ngrok_integration_proxy
-    command: http integration_service:8002
-    env_file:
-      - .env
-    environment:
-      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
-      NGROK_EDGE: worthy-civet-smart.ngrok-free.app
-    restart: unless-stopped
+#  redis:
+#    image: redis:7
+#    container_name: redis_container
+#    ports:
+#      - "6379:6379"
+#    restart: unless-stopped
+#
+#  rabbitmq:
+#    image: rabbitmq:3-management
+#    container_name: rabbitmq_container
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    environment:
+#      RABBITMQ_DEFAULT_USER: guest
+#      RABBITMQ_DEFAULT_PASS: guest
+#    restart: unless-stopped
+#
+#  ngrok:
+#    image: ngrok/ngrok:latest
+#    container_name: ngrok_integration_proxy
+#    command: http integration_service:8002
+#    env_file:
+#      - .env
+#    environment:
+#      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+#      NGROK_EDGE: worthy-civet-smart.ngrok-free.app
+#    restart: unless-stopped
 
   auth_service:
     container_name: auth_service_container

@@ -12,3 +12,11 @@ class ScenarioRepo:
             select(ScenariosModel).where(ScenariosModel.chat_id == chat_id)
         )
         return result.scalars().all()
+
+    @staticmethod
+    async def create_scenario(session: AsyncSession, scenarios: ScenariosModel):
+        session.add(scenarios)
+        await session.commit()
+        await session.refresh(scenarios)
+        return scenarios
+
