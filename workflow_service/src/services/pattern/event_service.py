@@ -72,9 +72,7 @@ class EventService:
             session: AsyncSession
     ):
         """in params used dependency injection (DI)"""
-        scenario_list = await self.scenario_service.get_scenarios(
-            chat_id, session, self.scenario_repo, self.redis_service, ttl=1000
-        )
+        scenario_list = await self.scenario_service.get_scenarios(chat_id, session)
         event = await self.check_event(chat_id)
 
         if not event:

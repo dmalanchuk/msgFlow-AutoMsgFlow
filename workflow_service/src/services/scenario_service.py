@@ -18,6 +18,13 @@ from src.services.scenario_get_email_service import ScenarioGetEmailService
 
 
 class ScenarioService:
+    def __init__(
+            self,
+            scenarios_repo: ScenarioRepo,
+            redis_service: ServiceRedis,
+    ):
+        self.scenarios_repo = scenarios_repo
+        self.redis_service = redis_service
 
     @staticmethod
     async def create_scenario(
@@ -47,21 +54,19 @@ class ScenarioService:
 
         return await scenarios_repo.create_scenario(session, new_scenario)
 
-    @staticmethod
     async def get_scenarios(
+            self,
             chat_id: int,
             session: AsyncSession,
-            scenarios_repo: ScenarioRepo,
-            redis_service: ServiceRedis,
             ttl: int = 1000
     ):
         key = f"chat:{chat_id}:scenarios"
 
-        cached = await redis_service.get_raw(key)
+        cached = await self.redis_service.get_raw(key)
         if cached:
             return json.loads(cached)
 
-        scenarios = await scenarios_repo.get_scenario(chat_id, session)
+        scenarios = await self.scenarios_repo.get_scenario(chat_id, session)
 
         to_cache = []
         for scenario in scenarios:
@@ -71,7 +76,7 @@ class ScenarioService:
                 "actions": scenario.actions
             })
 
-        await redis_service.set_raw(key, json.dumps(to_cache), ttl)
+        await self.redis_service.set_raw(key, json.dumps(to_cache), ttl)
         return to_cache
 
 
