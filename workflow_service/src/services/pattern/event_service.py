@@ -1,5 +1,7 @@
 from src.services.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
+from src.services.scenario_service import ScenarioService
+
 from src.logger import logger
 
 from src.schemas.event_schema import Event
@@ -8,20 +10,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class EventService:
+    def __init__(
+            self,
+            redis_service: ServiceRedis,
+            scenario_repo: ScenarioRepo,
+            scenario_service: ScenarioService
+    ):
+        self.redis_service = redis_service
+        self.scenario_repo = scenario_repo
+        self.scenario_service = scenario_service
 
-    @staticmethod
     async def check_event(
-            chat_id: int,
-            redis_service: ServiceRedis
+            self,
+            chat_id: int
     ):
         try:
-            updates = await redis_service.get_last_updates(chat_id, limit=1)
+            updates = await self.redis_service.get_last_updates(chat_id, limit=1)
 
             if not updates:
                 logger.info(f"No updates found for chat: {chat_id}")
-                return {"msg": "No updates"}
+                return None
 
-            return EventService._parse_update(updates[0])
+            return self._parse_update(updates[0])
 
         except Exception as e:
             logger.exception(f"Failed to check event for chat_id={chat_id}")
@@ -49,43 +59,33 @@ class EventService:
 
     @staticmethod
     def _detect_event_type(message: dict, event: str) -> str:
-        try:
-            if "new_chat_member" in message:
-                return "new_chat_member"
-            elif "left_chat_member" in message:
-                return "left_chat_member"
+        if "new_chat_member" in message:
+            return "new_chat_member"
+        elif "left_chat_member" in message:
+            return "left_chat_member"
 
-            return event
-        except Exception as e:
-            logger.warning(f"Failed to detect event type: {e}, message={message}, event={event}")
-            return "unknown"
+        return event
 
-    @staticmethod
     async def is_event_matched(
+            self,
             chat_id: int,
-            redis_service: ServiceRedis,
-            scenario_repo: ScenarioRepo,
             session: AsyncSession
     ):
         """in params used dependency injection (DI)"""
-        try:
+        scenario_list = await self.scenario_service.get_scenarios(
+            chat_id, session, self.scenario_repo, self.redis_service, ttl=1000
+        )
+        event = await self.check_event(chat_id)
 
-            scenario_list = await scenario_repo.get_scenario(chat_id, session)
-            event = await EventService.check_event(chat_id, redis_service)
-
-            if not event:
-                return False
-
-            incoming_event_type = event.get("event_type")
-            if not incoming_event_type:
-                return False
-
-            for scenario in scenario_list:
-                if scenario.event["type"] == incoming_event_type:
-                    return True
-
+        if not event:
             return False
 
-        except Exception as e:
-            logger.exception(f"Failed to check event for chat_id={chat_id}, error: {e}")
+        incoming_event_type = event.get("event_type")
+        if not incoming_event_type:
             return False
+
+        for scenario in scenario_list:
+            if scenario.event["type"] == incoming_event_type:
+                return True
+
+        return False
