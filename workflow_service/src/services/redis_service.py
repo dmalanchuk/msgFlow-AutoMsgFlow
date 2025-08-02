@@ -42,7 +42,7 @@ class ServiceRedis:
     @staticmethod
     async def get_raw(key: str):
         value = await redis.get(key)
-        return value.decode("utf-8") if value else None
+        return value.encode("utf-8") if value else None
 
     @staticmethod
     async def set_raw(key: str, value: str, ex: int = 300):
