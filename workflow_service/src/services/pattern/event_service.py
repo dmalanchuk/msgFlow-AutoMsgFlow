@@ -83,7 +83,7 @@ class EventService:
             return False
 
         for scenario in scenario_list:
-            if scenario.event["type"] == incoming_event_type:
+            if scenario.get("event")["type"] == incoming_event_type:
                 return True
 
         return False

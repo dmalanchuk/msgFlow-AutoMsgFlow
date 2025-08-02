@@ -5,6 +5,8 @@ from src.services.redis_service import ServiceRedis
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.logger import logger
+
 
 class ConditionService:
     def __init__(
@@ -30,11 +32,15 @@ class ConditionService:
         result = await self.event_service.is_event_matched(chat_id, session)
         text = await self.redis_service.get_last_messages(chat_id)
 
+        if not text:
+            logger.warning(f"No messages found in Redis for chat_id={chat_id}")
+            return False
+
         last_message = text[0]
 
         if result:
             for condition in conditions:
-                if condition.conditions["params"].get("word") in last_message.get("text"):
+                if condition.get("conditions").get("params")["word"] in last_message.get("text"):
                     return True
 
         return False
