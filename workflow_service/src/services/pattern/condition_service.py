@@ -28,7 +28,6 @@ class ConditionService:
     ) -> bool:
         """in params used dependency injection"""
 
-        conditions = await self.scenario_service.get_scenarios(chat_id, session)
         result = await self.event_service.is_event_matched(chat_id, session)
         text = await self.redis_service.get_last_messages(chat_id)
 
@@ -37,6 +36,8 @@ class ConditionService:
             return False
 
         last_message = text[0]
+
+        conditions = await self.scenario_service.get_scenarios(chat_id, session)
 
         if result:
             for condition in conditions:
