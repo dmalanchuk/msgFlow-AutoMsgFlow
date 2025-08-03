@@ -22,23 +22,24 @@ class ScenarioService:
             self,
             scenarios_repo: ScenarioRepo,
             redis_service: ServiceRedis,
+            get_email_service: ScenarioGetEmailService,
+            get_chat_id_service: GetChatIdService,
     ):
         self.scenarios_repo = scenarios_repo
         self.redis_service = redis_service
+        self.get_email_service = get_email_service
+        self.get_chat_id_service = get_chat_id_service
 
-    @staticmethod
     async def create_scenario(
+            self,
             session: AsyncSession,
             scenario: ScenarioCreate,
-            scenarios_repo: ScenarioRepo,
-            get_email_service: ScenarioGetEmailService,
-            get_chat_id_service: GetChatIdService,
             request: Request
     ):
 
         try:
-            chat_id = await get_chat_id_service.get_chat_id(scenario.chat_url)
-            user_email = get_email_service.get_user_email(request)
+            chat_id = await self.get_chat_id_service.get_chat_id(scenario.chat_url)
+            user_email = self.get_email_service.get_user_email(request)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
@@ -52,7 +53,7 @@ class ScenarioService:
 
         )
 
-        return await scenarios_repo.create_scenario(session, new_scenario)
+        return await self.scenarios_repo.create_scenario(session, new_scenario)
 
     async def get_scenarios(
             self,
@@ -71,6 +72,7 @@ class ScenarioService:
         to_cache = []
         for scenario in scenarios:
             to_cache.append({
+                "chat_id": scenario.chat_id,
                 "event": scenario.event,
                 "conditions": scenario.conditions,
                 "actions": scenario.actions
@@ -78,5 +80,3 @@ class ScenarioService:
 
         await self.redis_service.set_raw(key, json.dumps(to_cache), ttl)
         return to_cache
-
-

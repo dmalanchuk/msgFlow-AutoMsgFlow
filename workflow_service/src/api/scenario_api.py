@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.services.scenario_service import ScenarioService
 from src.schemas.scenario_schema import ScenarioCreate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
+from src.dependency import scenario_service
 
 router = APIRouter(prefix="/scenarios")
 
@@ -33,4 +33,4 @@ async def create_scenario(
         data: ScenarioCreate,
         session: AsyncSession = Depends(get_session)
 ):
-    return await ScenarioService.create_scenario(session, data, request)
+    return await scenario_service.create_scenario(session, data, request)
