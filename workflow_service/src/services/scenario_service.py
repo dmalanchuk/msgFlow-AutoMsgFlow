@@ -72,6 +72,7 @@ class ScenarioService:
         to_cache = []
         for scenario in scenarios:
             to_cache.append({
+                "chat_id": scenario.chat_id,
                 "event": scenario.event,
                 "conditions": scenario.conditions,
                 "actions": scenario.actions
