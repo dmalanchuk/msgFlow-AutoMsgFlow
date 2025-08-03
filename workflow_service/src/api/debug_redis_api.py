@@ -5,7 +5,7 @@ from src.services.redis_service import ServiceRedis
 from src.services.pattern.action_service import ActionService
 from src.database import get_session
 
-from src.dependency import condition_service, event_service
+from src.dependency import condition_service, event_service, action_service
 
 router_debug = APIRouter(prefix="/debug")
 
@@ -37,4 +37,4 @@ async def check_conditions(chat_id: int, session: AsyncSession = Depends(get_ses
 
 @router_debug.get("/chat/{chat_id}/actions")
 async def send_actions(chat_id: int, session: AsyncSession = Depends(get_session)):
-    return await ActionService.send_action_from_scenario(chat_id, session)
+    return await action_service.send_action_from_scenario(chat_id, session)
