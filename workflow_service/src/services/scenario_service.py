@@ -80,5 +80,3 @@ class ScenarioService:
 
         await self.redis_service.set_raw(key, json.dumps(to_cache), ttl)
         return to_cache
-
-

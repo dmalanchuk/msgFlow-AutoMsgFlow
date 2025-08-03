@@ -39,11 +39,12 @@ class ServiceRedis:
         updates = await redis.lrange(key, -limit, -1)
         return [json.loads(update) for update in updates]
 
+    # get and set scenarios from db
     @staticmethod
     async def get_raw(key: str):
         value = await redis.get(key)
         return value.encode("utf-8") if value else None
 
     @staticmethod
-    async def set_raw(key: str, value: str, ex: int = 300):
+    async def set_raw(key: str, value: str, ex: int = 1000):
         await redis.set(key, value, ex=ex)
