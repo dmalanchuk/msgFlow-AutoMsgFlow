@@ -1,11 +1,10 @@
 from src.redis.client_redis import redis
-from src.decorators import timer
 import json
 
 
 class ServiceRedis:
-    """saved last updates and messages"""
 
+    # saved last updates and messages
     @staticmethod
     async def save_update(chat_id: int, update: dict):
         key = f"chat:{chat_id}:updates"
@@ -25,8 +24,7 @@ class ServiceRedis:
         ))
         await redis.expire(key, 500)  # 86400
 
-    """get last updates and messages"""
-
+    # get last update and message
     @staticmethod
     async def get_last_messages(chat_id: int, limit: int = 1):
         key = f"chat:{chat_id}:messages"
