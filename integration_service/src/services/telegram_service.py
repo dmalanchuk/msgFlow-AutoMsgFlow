@@ -1,11 +1,10 @@
 from typing import Any
-from src.decorators import timer
+from src.logger import logger
 
 
 class TelegramService:
 
     @staticmethod
-    @timer
     async def get_update_type(update: dict[str, Any]) -> str:
         for key in [
             "message",
@@ -37,7 +36,8 @@ class TelegramService:
             elif update_type in ("chat_member", "my_chat_member", "chat_join_request"):
                 return update[update_type]["chat"]["id"]
         except Exception as e:
-            print(f"Failed to extract chat_id from update: {e}")
+            logger.info(f"Failed to extract chat_id from update: {e}")
+            return None
 
     @staticmethod
     async def extract_username(update: dict[str, Any], update_type: str) -> str | None:
@@ -53,4 +53,5 @@ class TelegramService:
             elif update_type == "chat_member":
                 return update["chat_member"]["from"].get("username")
         except Exception as e:
-            print(f"Failed to extract username from update: {e}")
+            logger.info(f"Failed to extract username from update: {e}")
+            return None

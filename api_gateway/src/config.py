@@ -9,8 +9,8 @@ class Settings(BaseSettings):
 
     """All url for services"""
     AUTH_SERVICE_URL: str = "http://127.0.0.1:8001"
-    WORKFLOW_SERVICE_URL: str = "http://localhost:8002"
-    INTERACTION_SERVICE_URL: str = "http://localhost:8003"
+    INTERACTION_SERVICE_URL: str = "http://localhost:8002"
+    WORKFLOW_SERVICE_URL: str = "http://localhost:8003"
 
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str

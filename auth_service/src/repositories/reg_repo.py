@@ -16,7 +16,6 @@ class RegUser:
 
     @staticmethod
     async def create_user(user: UserModel, session: AsyncSession):
-        # new_user = UserModel(**data.dict())
         session.add(user)
         await session.commit()
         await session.refresh(user)
