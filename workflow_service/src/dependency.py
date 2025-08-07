@@ -6,7 +6,7 @@ from src.services.pattern.event_service import EventService
 from src.services.pattern.condition_service import ConditionService
 from src.services.pattern.action_service import ActionService
 
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 
 from src.services.get_chat_id_service import GetChatIdService
 from src.services.scenario_get_email_service import ScenarioGetEmailService

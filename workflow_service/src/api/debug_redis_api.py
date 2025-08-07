@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.services.redis_service import ServiceRedis
-from src.services.pattern.action_service import ActionService
+from src.redis.redis_service import ServiceRedis
 from src.database import get_session
 
 from src.dependency import condition_service, event_service, action_service

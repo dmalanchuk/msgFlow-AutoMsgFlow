@@ -4,7 +4,7 @@ from src.config import settings
 from src.database import async_session
 from src.logger import logger
 from src.services.get_chat_id_service import GetChatIdService
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.pattern.condition_service import ConditionService
 from src.services.pattern.event_service import EventService
@@ -70,7 +70,7 @@ async def handle_incoming_message(message: dict):
 
 
     except Exception as e:
-        print(f"Error saving message in Redis: {e}")
+        logger.warning(f"Error saving message in Redis: {e}")
 
 async def publish_action(action: dict):
     await broker.publish(action, settings.ACTION_QUEUE_NAME)

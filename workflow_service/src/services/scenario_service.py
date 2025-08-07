@@ -3,7 +3,7 @@ import json
 from fastapi import Request, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 from src.models.scenarios_model import ScenariosModel
 from src.schemas.scenario_schema import ScenarioCreate
 

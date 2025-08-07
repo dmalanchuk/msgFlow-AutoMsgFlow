@@ -1,10 +1,9 @@
 from pydantic import json
-from pygments.lexer import words
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.scenario_service import ScenarioService
 from src.services.pattern.event_service import EventService
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
