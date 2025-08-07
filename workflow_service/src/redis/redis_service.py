@@ -24,6 +24,17 @@ class ServiceRedis:
         ))
         await redis.expire(key, 500)  # 86400
 
+    # Save action in Redis
+    @staticmethod
+    async def save_action(chat_id: int, action: dict):
+        key = f"chat:{chat_id}:action"
+        payload = {
+            "chat_id": chat_id,
+            "action": action
+        }
+        await redis.lpush(key, json.dumps(payload))
+        await redis.expire(key, 500)
+
     # get last update and message
     @staticmethod
     async def get_last_messages(chat_id: int, limit: int = 1):
