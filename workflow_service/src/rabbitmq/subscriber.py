@@ -1,6 +1,5 @@
 from faststream.rabbit import RabbitBroker
 
-from src.logger import logger
 from src.services.redis_service import ServiceRedis
 from src.config import settings
 
