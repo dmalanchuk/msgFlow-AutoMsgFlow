@@ -60,21 +60,21 @@ class ConditionService:
         # Get last message in Redis
         messages = await self.redis_service.get_last_messages(chat_id)
         if not messages:
-            print(f"No message in Redis for chat_id={chat_id}")
+            logger.warning(f"No message in Redis for chat_id={chat_id}")
             return False
 
         last_message = messages[0].get("text", "")
-        print(f"Last message from Redis: {last_message}")
+        logger.info(f"Last message from Redis: {last_message}")
 
         # Get condition raw
         condition_raw = scenario.conditions
-        print(f"Condition raw: {condition_raw}")
+        logger.info(f"Condition raw: {condition_raw}")
 
         if isinstance(condition_raw, str):
             try:
                 condition = json.loads(condition_raw)
             except json.JSONDecodeError:
-                print("Error parsing JSON в scenario.conditions")
+                logger.error("Error parsing JSON в scenario.conditions")
                 return False
         else:
             condition = condition_raw
@@ -86,9 +86,9 @@ class ConditionService:
         if condition_type == "contains_word":
             word = condition_params.get("word", "").lower()
             if word in last_message.lower():
-                print(f"Match by contains_word: '{word}' found in '{last_message}'")
+                logger.info(f"Match by contains_word: '{word}' found in '{last_message}'")
                 return True
             else:
-                print(f"Word '{word}' not found in '{last_message}'")
+                logger.info(f"Word '{word}' not found in '{last_message}'")
 
         return False

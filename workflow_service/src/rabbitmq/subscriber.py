@@ -44,7 +44,7 @@ async def handle_incoming_message(message: dict):
 
             scenarios = await scenario_repo.get_scenario(chat_id, session)
             if not scenarios:
-                logger.info(f"No scenarios found for chat_id={chat_id}")
+                logger.warning(f"No scenarios found for chat_id={chat_id}")
                 return
 
             any_action_published = False
@@ -70,7 +70,7 @@ async def handle_incoming_message(message: dict):
 
 
     except Exception as e:
-        logger.warning(f"Error saving message in Redis: {e}")
+        logger.exception(f"Error saving message in Redis: {e}")
 
 async def publish_action(action: dict):
     await broker.publish(action, settings.ACTION_QUEUE_NAME)
