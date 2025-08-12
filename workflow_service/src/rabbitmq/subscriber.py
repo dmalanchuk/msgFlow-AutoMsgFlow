@@ -31,7 +31,7 @@ async def handle_incoming_message(message: dict):
         await ServiceRedis.save_update(chat_id, raw_update)
         if text:
             await ServiceRedis.save_message(chat_id, text, msg_id, source, event_type)
-        print(f"Update saved in Redis for chat: {chat_id}")
+        logger.info(f"Update saved in Redis for chat: {chat_id}")
 
         async with async_session() as session:
             redis_service = ServiceRedis()
@@ -74,4 +74,4 @@ async def handle_incoming_message(message: dict):
 
 async def publish_action(action: dict):
     await broker.publish(action, settings.ACTION_QUEUE_NAME)
-    print("Action published in action queue")
+    logger.info("Action published in action queue")
