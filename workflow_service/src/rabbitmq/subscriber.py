@@ -1,5 +1,6 @@
 from faststream.rabbit import RabbitBroker
 
+from src.logger import logger
 from src.services.redis_service import ServiceRedis
 from src.config import settings
 
@@ -25,10 +26,10 @@ async def handle_incoming_message(message: dict):
         if text:
             await ServiceRedis.save_message(chat_id, text, msg_id, source, event_type)
 
-        print(f"Update saved in Redis for chat: {chat_id}")
+        logger.debug(f"Update saved in Redis for chat: {chat_id}")
 
     except Exception as e:
-        print(f"Error saving message in Redis: {e}")
+        logger.error(f"Error saving message in Redis: {e}")
 
 
 async def publish_action(action: dict):
