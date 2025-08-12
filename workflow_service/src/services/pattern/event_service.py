@@ -1,4 +1,4 @@
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.scenario_service import ScenarioService
 

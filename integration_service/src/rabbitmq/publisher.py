@@ -1,7 +1,5 @@
-from faststream.rabbit import RabbitBroker
 from src.config import settings
-
-broker = RabbitBroker(settings.RABBITMQ_URL)
+from src.rabbitmq.broker import broker
 
 
 async def publish_to_queue(payload: dict):

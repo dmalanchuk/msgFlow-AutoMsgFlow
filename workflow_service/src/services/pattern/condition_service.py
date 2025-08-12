@@ -1,9 +1,9 @@
-from pygments.lexer import words
+from pydantic import json
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.scenario_service import ScenarioService
 from src.services.pattern.event_service import EventService
-from src.services.redis_service import ServiceRedis
+from src.redis.redis_service import ServiceRedis
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -53,5 +53,42 @@ class ConditionService:
 
                 if word and word in last_message["text"]:
                     return True
+
+        return False
+
+    async def check_conditions_for_scenario(self, scenario, chat_id: int, session):
+        # Get last message in Redis
+        messages = await self.redis_service.get_last_messages(chat_id)
+        if not messages:
+            print(f"No message in Redis for chat_id={chat_id}")
+            return False
+
+        last_message = messages[0].get("text", "")
+        print(f"Last message from Redis: {last_message}")
+
+        # Get condition raw
+        condition_raw = scenario.conditions
+        print(f"Condition raw: {condition_raw}")
+
+        if isinstance(condition_raw, str):
+            try:
+                condition = json.loads(condition_raw)
+            except json.JSONDecodeError:
+                print("Error parsing JSON в scenario.conditions")
+                return False
+        else:
+            condition = condition_raw
+
+        condition_type = condition.get("type")
+        condition_params = condition.get("params", {})
+
+        # 3. Data type processing
+        if condition_type == "contains_word":
+            word = condition_params.get("word", "").lower()
+            if word in last_message.lower():
+                print(f"Match by contains_word: '{word}' found in '{last_message}'")
+                return True
+            else:
+                print(f"Word '{word}' not found in '{last_message}'")
 
         return False

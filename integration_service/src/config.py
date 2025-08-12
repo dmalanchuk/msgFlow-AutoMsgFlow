@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     TELEGRAM_TOKEN: str
     RABBITMQ_URL: str
     QUEUE_NAME: str
-
+    REDIS_URL: str
     ACTION_QUEUE_NAME: str
 
     class Config:
