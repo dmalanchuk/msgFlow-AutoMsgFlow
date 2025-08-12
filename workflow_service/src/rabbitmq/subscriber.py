@@ -26,10 +26,10 @@ async def handle_incoming_message(message: dict):
         if text:
             await ServiceRedis.save_message(chat_id, text, msg_id, source, event_type)
 
-        logger.debug(f"Update saved in Redis for chat: {chat_id}")
+        print(f"Update saved in Redis for chat: {chat_id}")
 
     except Exception as e:
-        logger.error(f"Error saving message in Redis: {e}")
+        print(f"Error saving message in Redis: {e}")
 
 
 async def publish_action(action: dict):
