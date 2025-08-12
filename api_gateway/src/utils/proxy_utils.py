@@ -7,7 +7,7 @@ async def proxy_request(request: Request, url: str) -> Response:
 
     body = await request.body()
 
-    # Копіюємо заголовки
+    # Copy headers
     headers = dict(request.headers)
 
     user_email = getattr(request.state, "user_email", None)

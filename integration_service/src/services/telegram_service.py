@@ -36,7 +36,7 @@ class TelegramService:
             elif update_type in ("chat_member", "my_chat_member", "chat_join_request"):
                 return update[update_type]["chat"]["id"]
         except Exception as e:
-            logger.info(f"Failed to extract chat_id from update: {e}")
+            logger.exception(f"Failed to extract chat_id from update: {e}")
             return None
 
     @staticmethod
@@ -53,5 +53,5 @@ class TelegramService:
             elif update_type == "chat_member":
                 return update["chat_member"]["from"].get("username")
         except Exception as e:
-            logger.info(f"Failed to extract username from update: {e}")
+            logger.exception(f"Failed to extract username from update: {e}")
             return None

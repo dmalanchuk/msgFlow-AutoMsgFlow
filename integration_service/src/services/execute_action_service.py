@@ -1,5 +1,6 @@
 import json
 
+from src.logger import logger
 from src.redis.redis_client import redis
 from src.services.sender import send_message
 
@@ -11,14 +12,14 @@ class ExecuteActionService:
         redis_key = f"chat:{chat_id}:action"
         action_raw = await redis.lindex(redis_key, 0)
         if not action_raw:
-            print(f"No action found in Redis for chat_id{chat_id}")
+            logger.warning(f"No action found in Redis for chat_id{chat_id}")
             return
 
         try:
             action_payload = json.loads(action_raw)
             action = action_payload.get("action", {})
         except json.JSONDecodeError:
-            print(f"Incorrect json in redis for chat_id{chat_id}")
+            logger.error(f"Incorrect json in redis for chat_id{chat_id}")
             return
 
 
@@ -28,11 +29,11 @@ class ExecuteActionService:
         if action_type == "send_message":
             text = params.get("text")
             if not text:
-                print(f"Missing text in action for chat_id: {chat_id}")
+                logger.info(f"Missing text in action for chat_id: {chat_id}")
                 return
 
             await send_message(chat_id, text)
-            print(f"Send message to Telegram in chat_id: {chat_id}")
+            logger.info(f"Send message to Telegram in chat_id: {chat_id}")
 
         else:
-            print(f"Incorrect action type {action.get("type"), action_type}")
+            logger.error(f"Incorrect action type {action.get("type"), action_type}")
