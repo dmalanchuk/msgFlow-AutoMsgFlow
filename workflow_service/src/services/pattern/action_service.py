@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.pattern.condition_service import ConditionService
-from src.rabbitmq.subscriber import publish_action
+from src.rabbitmq.publisher import publish_action
 
 from src.logger import logger
 
