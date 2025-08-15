@@ -1,19 +1,9 @@
-from faststream.rabbit import RabbitBroker
-
 from src.config import settings
-from src.database import async_session
 from src.logger import logger
+from src.rabbitmq.broker import broker
 from src.services.execute_action import ExecuteAction
-from src.services.get_chat_id_service import GetChatIdService
 from src.redis.redis_service import ServiceRedis
-from src.repositories.scenario_repo import ScenarioRepo
-from src.services.pattern.condition_service import ConditionService
-from src.services.pattern.event_service import EventService
-from src.services.scenario_get_email_service import ScenarioGetEmailService
-from src.services.scenario_service import ScenarioService
 
-
-broker = RabbitBroker(settings.RABBITMQ_URL)
 
 @broker.subscriber(settings.QUEUE_NAME)
 async def handle_incoming_message(message: dict):
@@ -38,7 +28,3 @@ async def handle_incoming_message(message: dict):
 
     except Exception as e:
         logger.exception(f"Error saving message in Redis: {e}")
-
-async def publish_action(action: dict):
-    await broker.publish(action, settings.ACTION_QUEUE_NAME)
-    logger.info("Action published in action queue")
