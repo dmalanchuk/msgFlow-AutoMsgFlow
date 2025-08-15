@@ -15,7 +15,7 @@ from pydantic import BaseModel
 
 
 class EventInfo(BaseModel):
-    type: Literal["message_received", "user_joined"]
+    type: Literal["message_received", "user_joined", "user_left"]
     source: Literal["telegram", "discord", "email"]  # add checking if email, add new column where u write your email
 
 
@@ -25,13 +25,14 @@ class Condition(BaseModel):
 
 
 class Action(BaseModel):
-    type: Literal["send_message", "forward", "notion_record"]
+    type: Literal["send_message", "forward"]
     params: Dict[str, Any]
 
 
 class ScenarioCreate(BaseModel):
     name: str
     chat_url: str
+    owner_email: str
     event: EventInfo
     condition: Condition
     action: Action
