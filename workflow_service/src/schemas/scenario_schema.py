@@ -1,63 +1,38 @@
 from typing import Dict, Any, Literal
 from pydantic import BaseModel
 
+
 """
-Example for EventInfo:
-    {
-      "type": "message_received",
-      "source": "telegram"
-    }   
+    Scenario schema haver the same structure as in the database,
+    and are used three unique classes for validation:
+        - EventInfo
+        - Condition
+        - Action 
+        
+    This classes are used 'Literal' for validation, 
+    and are used in the ScenarioCreate class for validation.  
 """
 
 
 class EventInfo(BaseModel):
-    type: Literal["message_received", "user_joined", "reaction_added"]
-    source: Literal["telegram", "discord", "email", "notion"]
-
-
-"""
-1. Example for Condition:
-    {
-      "type": "contains_word",
-      "params": {
-        "word": "замовлення"
-      }
-    }
-2. Example for Condition:    
-    {
-      "type": "starts_with",
-      "params": {
-        "prefix": "Привіт"
-      }
-    }
-"""
+    type: Literal["message_received", "user_joined", "user_left", "new_post"]
+    source: Literal["telegram", "discord", "email"]  # add checking if email, add new column where u write your email
 
 
 class Condition(BaseModel):
-    type: Literal["contains_word", "starts_with", "equals"]
+    type: Literal["contains_word", "equals"]
     params: Dict[str, Any]
 
 
-"""
-1. Example for Action:  
-    {
-      "type": "send_message",
-      "params": {
-        "chat_id": 123456789,
-        "text": "Дякуємо за ваше замовлення!"
-      }
-    }
-"""
-
-
 class Action(BaseModel):
-    type: Literal["send_message", "forward", "notion_record"]
+    type: Literal["send_message", "forward"]
     params: Dict[str, Any]
 
 
 class ScenarioCreate(BaseModel):
     name: str
     chat_url: str
+    owner_email: str
     event: EventInfo
     condition: Condition
     action: Action

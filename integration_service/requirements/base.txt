@@ -1,4 +1,5 @@
 fastapi[standard]
+redis[hiredis]
 uvicorn
 
 pydantic
