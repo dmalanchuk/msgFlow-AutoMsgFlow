@@ -15,7 +15,7 @@ from pydantic import BaseModel
 
 
 class EventInfo(BaseModel):
-    type: Literal["message_received", "user_joined", "user_left"]
+    type: Literal["message_received", "user_joined", "user_left", "new_post"]
     source: Literal["telegram", "discord", "email"]  # add checking if email, add new column where u write your email
 
 
