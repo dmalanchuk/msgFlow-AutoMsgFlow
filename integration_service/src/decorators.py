@@ -1,6 +1,8 @@
 import time
 from functools import wraps
 
+from src.logger import logger
+
 
 def timer(func):
     @wraps(func)
@@ -8,7 +10,7 @@ def timer(func):
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
-        print(f"Function {func.__name__} took {end - start} seconds to run.")
+        logger.info(f"Function {func.__name__} took {end - start} seconds to run.")
 
         return result
 

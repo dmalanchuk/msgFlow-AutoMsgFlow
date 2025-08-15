@@ -1,7 +1,6 @@
 from src.config import settings
 from src.database import async_session
 from src.logger import logger
-
 from src.services.get_chat_id_service import GetChatIdService
 from src.redis.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
@@ -9,9 +8,8 @@ from src.services.pattern.condition_service import ConditionService
 from src.services.pattern.event_service import EventService
 from src.services.scenario_get_email_service import ScenarioGetEmailService
 from src.services.scenario_service import ScenarioService
-
-from src.rabbitmq.broker import broker
 from src.rabbitmq.publisher import publish_action
+from src.rabbitmq.broker import broker
 
 
 @broker.subscriber(settings.QUEUE_NAME)
@@ -31,7 +29,7 @@ async def handle_incoming_message(message: dict):
         await ServiceRedis.save_update(chat_id, raw_update)
         if text:
             await ServiceRedis.save_message(chat_id, text, msg_id, source, event_type)
-        print(f"Update saved in Redis for chat: {chat_id}")
+        logger.info(f"Update saved in Redis for chat: {chat_id}")
 
         async with async_session() as session:
             redis_service = ServiceRedis()
@@ -44,7 +42,7 @@ async def handle_incoming_message(message: dict):
 
             scenarios = await scenario_repo.get_scenario(chat_id, session)
             if not scenarios:
-                logger.info(f"No scenarios found for chat_id={chat_id}")
+                logger.warning(f"No scenarios found for chat_id={chat_id}")
                 return
 
             any_action_published = False
@@ -69,4 +67,4 @@ async def handle_incoming_message(message: dict):
                 logger.info(f"Conditions not met for any scenario for chat_id={chat_id}")
 
     except Exception as e:
-        logger.warning(f"Error saving message in Redis: {e}")
+        logger.exception(f"Error saving message in Redis: {e}")
