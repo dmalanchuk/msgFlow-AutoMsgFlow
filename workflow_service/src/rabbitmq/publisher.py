@@ -1,6 +1,6 @@
 from src.config import settings
 from src.logger import logger
-from src.rabbitmq.subscriber import broker
+from src.rabbitmq.broker import broker
 
 
 async def publish_action(action: dict):
