@@ -14,3 +14,7 @@ psycopg2-binary
 asyncpg
 
 greenlet
+
+# =========for tests========
+# pytest, for unit test
+# k6, for load test
