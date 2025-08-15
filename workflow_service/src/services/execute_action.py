@@ -1,9 +1,6 @@
-from faststream.rabbit import RabbitBroker
-
-from src.config import settings
 from src.database import async_session
 from src.logger import logger
-from src.rabbitmq.subscriber import publish_action
+from src.rabbitmq.publisher import publish_action
 from src.services.get_chat_id_service import GetChatIdService
 from src.redis.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
@@ -38,6 +35,7 @@ class ExecuteAction:
                     if not isinstance(actions, list):
                         actions = [actions]
 
+                    #if action - published action in redis and action_queue
                     for action in actions:
                         await ServiceRedis.save_action(chat_id, action)
                         await publish_action({
