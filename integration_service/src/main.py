@@ -5,6 +5,7 @@ from src.routes.router import router
 from src.rabbitmq.broker import broker
 from src.rabbitmq.subscriber import handle_workflow_response
 
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     await broker.connect()
