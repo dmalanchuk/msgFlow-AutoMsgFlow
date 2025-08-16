@@ -15,7 +15,16 @@ auth_router = APIRouter(
 )
 
 
-@auth_router.post("/register")
+@auth_router.post(
+    "/register",
+    summary="Register new user",
+    description="Used to create a new user, with required fields: email, username, password",
+    status_code=201,
+    responses={
+        409: {"description": "User is already registered"},
+        400: {"description": "Invalid data in request state"},
+    }
+)
 async def register_user(
         data: CreateUser = Body(...),
         session: AsyncSession = Depends(get_session)
@@ -23,7 +32,17 @@ async def register_user(
     return await RegServices.reg_user_service(data, session)
 
 
-@auth_router.post("/login")
+@auth_router.post(
+    "/login",
+    summary="Login user",
+    description="Used to login user, with required fields: email, password",
+    status_code=200,
+    responses={
+        401: {"description": "Missing user email in request state"},
+        404: {"description": "User not found"},
+        400: {"description": "Invalid data in request state"},
+    }
+)
 async def login_user(
         response: Response,
         data: LoginUser = Body(...),
@@ -32,7 +51,15 @@ async def login_user(
     return await LoginService.login_user_service(data, response, session)
 
 
-@auth_router.post("/logout")
+@auth_router.delete(
+    "/logout",
+    summary="Logout user",
+    description="Used to logout user",
+    status_code=200,
+    responses={
+        401: {"description": "Refresh token required"},
+    }
+)
 async def logout_user(
         request: Request,
         response: Response,
@@ -41,7 +68,16 @@ async def logout_user(
     return await LogoutService.logout_service(request, response, session)
 
 
-@auth_router.get("/profile")
+@auth_router.get(
+    "/profile",
+    summary="Get profile",
+    description="Used to get info of user: username, email",
+    status_code=200,
+    responses={
+        401: {"description": "Refresh token required"},
+        404: {"description": "User not found"},
+    }
+)
 async def get_profile(
         request: Request,
         session: AsyncSession = Depends(get_session)

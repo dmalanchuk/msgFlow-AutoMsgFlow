@@ -11,26 +11,58 @@ from src.dependency import scenario_service
 
 router = APIRouter(prefix="/scenarios")
 
-"""get scenario metadata"""
 
-
-@router.get("/metadata/actions")
+@router.get("/actions/metadata")
 async def get_actions_metadata():
     return ACTIONS_METADATA
 
 
-@router.get("/metadata/conditions")
+@router.get("/conditions/metadata")
 async def get_conditions_metadata():
     return CONDITIONS_METADATA
 
 
-"""Call this router in api_gateway"""
-
-
-@router.post("/create")
+@router.post(
+    "/new",
+    summary="Create new scenario",
+    description="This endpoint allows you to create a new script by template",
+    status_code=201,
+    responses={
+        201: {"description": "Scenario created successfully"},
+        400: {"description": "Invalid request"},
+    },
+)
 async def create_scenario(
         request: Request,
         data: ScenarioCreate,
         session: AsyncSession = Depends(get_session)
 ):
     return await scenario_service.create_scenario(session, data, request)
+
+
+@router.delete(
+    "/{name}",
+    summary="Delete scenario by name",
+    description="This endpoint allows you to delete a scenario by name",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario deleted successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get_session)):
+    ...
+
+
+@router.patch(
+    "/{name}",
+    summary="Update scenario by name",
+    description="With this endpoint you can update some params by the name of your script",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario updated successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def update_param_by_name(name: str, session: AsyncSession = Depends(get_session)):
+    ...
