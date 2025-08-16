@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 
 from src.api.scenario_api import router
 from src.api.debug_redis_api import router_debug
-from src.rabbitmq.subscriber import broker
-
+from src.rabbitmq.broker import broker
+from src.rabbitmq.subscriber import handle_incoming_message
 """ FastAPI app with RabbitMQ subscriber """
 
 
