@@ -12,12 +12,12 @@ from src.dependency import scenario_service
 router = APIRouter(prefix="/scenarios")
 
 
-@router.get("/metadata/actions")
+@router.get("/actions/metadata")
 async def get_actions_metadata():
     return ACTIONS_METADATA
 
 
-@router.get("/metadata/conditions")
+@router.get("/conditions/metadata")
 async def get_conditions_metadata():
     return CONDITIONS_METADATA
 
