@@ -23,7 +23,7 @@ async def get_conditions_metadata():
 
 
 @router.post(
-    "/create",
+    "/new",
     summary="Create new scenario",
     description="This endpoint allows you to create a new script by template",
     status_code=201,
@@ -41,7 +41,7 @@ async def create_scenario(
 
 
 @router.delete(
-    "/delete/{name}",
+    "/{name}",
     summary="Delete scenario by name",
     description="This endpoint allows you to delete a scenario by name",
     status_code=200,
@@ -55,7 +55,7 @@ async def delete_scenario(session: AsyncSession = Depends(get_session)):
 
 
 @router.patch(
-    "/update/{name}",
+    "/{name}",
     summary="Update scenario by name",
     description="With this endpoint you can update some params by the name of your script",
     status_code=200,
