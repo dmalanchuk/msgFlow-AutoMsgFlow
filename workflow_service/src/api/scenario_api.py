@@ -23,7 +23,7 @@ async def get_conditions_metadata():
 
 
 @router.post(
-    "/new",
+    "",
     summary="Create new scenario",
     description="This endpoint allows you to create a new script by template",
     status_code=201,
@@ -44,9 +44,8 @@ async def create_scenario(
     "/{name}",
     summary="Delete scenario by name",
     description="This endpoint allows you to delete a scenario by name",
-    status_code=200,
+    status_code=204,
     responses={
-        200: {"description": "Scenario deleted successfully"},
         404: {"description": "Scenario not found"}
     },
 )
@@ -65,4 +64,18 @@ async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get
     },
 )
 async def update_param_by_name(name: str, session: AsyncSession = Depends(get_session)):
+    ...
+
+
+@router.put(
+    "/{name}",
+    summary="Full update scenario by name",
+    description="With this endpoint you can full update by the name of your script",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario updated successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def full_update_by_name(name: str, session: AsyncSession = Depends(get_session)):
     ...
