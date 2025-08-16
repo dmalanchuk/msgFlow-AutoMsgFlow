@@ -50,7 +50,7 @@ async def create_scenario(
         404: {"description": "Scenario not found"}
     },
 )
-async def delete_scenario(session: AsyncSession = Depends(get_session)):
+async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get_session)):
     ...
 
 
@@ -64,5 +64,5 @@ async def delete_scenario(session: AsyncSession = Depends(get_session)):
         404: {"description": "Scenario not found"}
     },
 )
-async def update_param_by_name(session: AsyncSession = Depends(get_session)):
+async def update_param_by_name(name: str, session: AsyncSession = Depends(get_session)):
     ...
