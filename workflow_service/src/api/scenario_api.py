@@ -91,4 +91,5 @@ async def full_update_by_name(name: str, session: AsyncSession = Depends(get_ses
     },
 )
 async def get_scenarios(chat_id: int, session: AsyncSession = Depends(get_session)):
+    # To-Do: Make to the current mail so that the user can only see their scripts
     return await scenario_service.get_scenarios(chat_id, session)
