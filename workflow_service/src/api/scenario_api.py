@@ -79,3 +79,16 @@ async def update_param_by_name(name: str, session: AsyncSession = Depends(get_se
 )
 async def full_update_by_name(name: str, session: AsyncSession = Depends(get_session)):
     ...
+
+
+@router.get(
+    "",
+    summary="Get all scenarios",
+    description="endpoint for getting all scenarios",
+    status_code=200,
+    responses={
+        404: {"description": "Scenario not found"}
+    },
+)
+async def get_scenarios(chat_id: int, session: AsyncSession = Depends(get_session)):
+    return await scenario_service.get_scenarios(chat_id, session)
