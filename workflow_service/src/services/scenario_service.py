@@ -39,7 +39,8 @@ class ScenarioService:
 
         try:
             chat_id = await self.get_chat_id_service.get_chat_id(scenario.chat_url)
-            user_email = scenario.owner_email if scenario.owner_email else self.get_email_service.get_user_email(request)
+            user_email = scenario.owner_email if scenario.owner_email else self.get_email_service.get_user_email(
+                request)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
@@ -80,3 +81,12 @@ class ScenarioService:
 
         await self.redis_service.set_raw(key, json.dumps(to_cache), ttl)
         return to_cache
+
+    async def delete_scenario(self, name: str, session: AsyncSession):
+        scenario = await self.scenarios_repo.get_by_name(name, session)
+
+        if not scenario:
+            raise HTTPException(status_code=404, detail="Scenario not found")
+
+        await self.scenarios_repo.delete(scenario, session)
+
