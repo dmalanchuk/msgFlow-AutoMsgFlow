@@ -49,7 +49,10 @@ async def create_scenario(
         404: {"description": "Scenario not found"}
     },
 )
-async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get_session)):
+async def delete_scenario_by_name(
+        name: str,
+        session: AsyncSession = Depends(get_session)
+):
     return await scenario_service.delete_scenario(name, session)
 
 
@@ -63,7 +66,10 @@ async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get
         404: {"description": "Scenario not found"}
     },
 )
-async def update_param_by_name(name: str, session: AsyncSession = Depends(get_session)):
+async def update_param_by_name(
+        name: str, session:
+        AsyncSession = Depends(get_session)
+):
     ...
 
 
@@ -77,7 +83,10 @@ async def update_param_by_name(name: str, session: AsyncSession = Depends(get_se
         404: {"description": "Scenario not found"}
     },
 )
-async def full_update_by_name(name: str, session: AsyncSession = Depends(get_session)):
+async def full_update_by_name(
+        name: str,
+        session: AsyncSession = Depends(get_session)
+):
     ...
 
 
@@ -90,6 +99,9 @@ async def full_update_by_name(name: str, session: AsyncSession = Depends(get_ses
         404: {"description": "Scenario not found"}
     },
 )
-async def get_scenarios(chat_id: int, session: AsyncSession = Depends(get_session)):
+async def get_scenarios(
+        chat_id: int,
+        session: AsyncSession = Depends(get_session)
+):
     # To-Do: Make to the current mail so that the user can only see their scripts
     return await scenario_service.get_scenarios(chat_id, session)
