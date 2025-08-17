@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     REDIS_URL: str
 
+    SECRET_KEY: str
+    ALGORITHM: str
+
     class Config:
         env_file = ".env"
 
