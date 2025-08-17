@@ -50,7 +50,7 @@ async def create_scenario(
     },
 )
 async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get_session)):
-    ...
+    return await scenario_service.delete_scenario(name, session)
 
 
 @router.patch(
