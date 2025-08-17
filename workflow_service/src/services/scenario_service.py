@@ -8,8 +8,8 @@ from src.models.scenarios_model import ScenariosModel
 from src.schemas.scenario_schema import ScenarioCreate
 
 from src.repositories.scenario_repo import ScenarioRepo
-from src.services.get_chat_id_service import GetChatIdService
-from src.services.scenario_get_email_service import ScenarioGetEmailService
+from core.get_chat_id import GetChatId
+from core.get_user_email import GetUserEmail
 
 """
     Business logic service for processing, creating, 
@@ -22,14 +22,15 @@ class ScenarioService:
             self,
             scenarios_repo: ScenarioRepo,
             redis_service: ServiceRedis,
-            get_email_service: ScenarioGetEmailService,
-            get_chat_id_service: GetChatIdService,
+            get_email_service: GetUserEmail,
+            get_chat_id_service: GetChatId,
     ):
         self.scenarios_repo = scenarios_repo
         self.redis_service = redis_service
         self.get_email_service = get_email_service
         self.get_chat_id_service = get_chat_id_service
 
+    # create scenarios
     async def create_scenario(
             self,
             session: AsyncSession,
@@ -56,6 +57,7 @@ class ScenarioService:
 
         return await self.scenarios_repo.create_scenario(session, new_scenario)
 
+    # needs refactoring: get scenarios
     async def get_scenarios(
             self,
             chat_id: int,
@@ -90,4 +92,3 @@ class ScenarioService:
             raise HTTPException(status_code=404, detail="Scenario not found")
 
         await self.scenarios_repo.delete(scenario, session)
-

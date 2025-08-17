@@ -1,12 +1,12 @@
 from src.database import async_session
 from src.logger import logger
 from src.rabbitmq.publisher import publish_action
-from src.services.get_chat_id_service import GetChatIdService
+from core.get_chat_id import GetChatId
 from src.redis.redis_service import ServiceRedis
 from src.repositories.scenario_repo import ScenarioRepo
 from src.services.pattern.condition_service import ConditionService
 from src.services.pattern.event_service import EventService
-from src.services.scenario_get_email_service import ScenarioGetEmailService
+from core.get_user_email import GetUserEmail
 from src.services.scenario_service import ScenarioService
 
 
@@ -16,8 +16,8 @@ class ExecuteAction:
         async with async_session() as session:
             redis_service = ServiceRedis()
             scenario_repo = ScenarioRepo()
-            get_chat_id_service = ScenarioGetEmailService()
-            get_email_service = GetChatIdService()
+            get_chat_id_service = GetUserEmail()
+            get_email_service = GetChatId()
             scenario_service = ScenarioService(scenario_repo, redis_service, get_chat_id_service, get_email_service)
             event_service = EventService(redis_service, scenario_repo, scenario_service)
             condition_service = ConditionService(redis_service, event_service, scenario_repo, scenario_service)
