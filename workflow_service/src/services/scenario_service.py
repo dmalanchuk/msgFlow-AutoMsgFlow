@@ -82,6 +82,7 @@ class ScenarioService:
         await self.redis_service.set_raw(key, json.dumps(to_cache), ttl)
         return to_cache
 
+    # delete scenarios by name
     async def delete_scenario(self, name: str, session: AsyncSession):
         scenario = await self.scenarios_repo.get_by_name(name, session)
 
