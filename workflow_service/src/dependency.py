@@ -8,8 +8,8 @@ from src.services.pattern.action_service import ActionService
 
 from src.redis.redis_service import ServiceRedis
 
-from core.get_chat_id import GetChatId
-from core.get_user_email import GetUserEmail
+from utils.get_chat_id import GetChatId
+from utils.get_user_email import GetUserEmail
 
 # class instance - because services used DI (dependency injection)
 get_chat_id = GetChatId()

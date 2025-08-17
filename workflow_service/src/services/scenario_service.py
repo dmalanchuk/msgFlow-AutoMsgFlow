@@ -8,8 +8,8 @@ from src.models.scenarios_model import ScenariosModel
 from src.schemas.scenario_schema import ScenarioCreate
 
 from src.repositories.scenario_repo import ScenarioRepo
-from core.get_chat_id import GetChatId
-from core.get_user_email import GetUserEmail
+from utils.get_chat_id import GetChatId
+from utils.get_user_email import GetUserEmail
 
 """
     Business logic service for processing, creating, 
