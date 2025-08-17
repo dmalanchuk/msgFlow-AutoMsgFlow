@@ -9,6 +9,7 @@ from src.services.pattern.event_service import EventService
 from src.services.scenario_get_email_service import ScenarioGetEmailService
 from src.services.scenario_service import ScenarioService
 
+
 class ExecuteAction:
     @staticmethod
     async def execute_actions(chat_id: int):
@@ -35,7 +36,7 @@ class ExecuteAction:
                     if not isinstance(actions, list):
                         actions = [actions]
 
-                    #if action - published action in redis and action_queue
+                    # if action - published action in redis and action_queue
                     for action in actions:
                         await ServiceRedis.save_action(chat_id, action)
                         await publish_action({

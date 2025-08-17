@@ -1,7 +1,7 @@
 from src.rabbitmq.broker import broker
 from src.config import settings
 from src.logger import logger
-from src.services.execute_action import ExecuteAction
+from src.services.execute_action_service import ExecuteAction
 from src.redis.redis_service import ServiceRedis
 
 
