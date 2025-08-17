@@ -1,3 +1,5 @@
+from typing import Coroutine
+
 from src.models.scenarios_model import ScenariosModel
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,3 +22,15 @@ class ScenarioRepo:
         await session.refresh(scenarios)
         return scenarios
 
+    @staticmethod
+    async def get_by_name(name: str, session: AsyncSession):
+        smtp = await session.execute(
+            select(ScenariosModel).where(ScenariosModel.name == name)
+        )
+
+        return smtp.scalars().first()
+
+    @staticmethod
+    async def delete(scenario: Coroutine, session: AsyncSession):
+        await session.delete(scenario)
+        await session.commit()
