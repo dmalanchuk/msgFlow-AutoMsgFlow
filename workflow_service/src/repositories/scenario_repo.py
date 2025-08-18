@@ -45,6 +45,6 @@ class ScenarioRepo:
 
     @staticmethod
     async def update(scenario, session: AsyncSession):
-        await session.commit(scenario)
+        await session.commit()
         await session.refresh(scenario)
         return scenario
