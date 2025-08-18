@@ -1,10 +1,10 @@
-from fastapi import Request
+from fastapi import Request, Body
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.schemas.scenario_schema import ScenarioCreate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioPatchUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.dependency import scenario_service
@@ -57,7 +57,7 @@ async def delete_scenario_by_name(
 
 
 @router.patch(
-    "/{name}",
+    "/{id}",
     summary="Update scenario by name",
     description="With this endpoint you can update some params by the name of your script",
     status_code=200,
@@ -66,11 +66,12 @@ async def delete_scenario_by_name(
         404: {"description": "Scenario not found"}
     },
 )
-async def update_param_by_name(
-        name: str, session:
-        AsyncSession = Depends(get_session)
+async def update_param_by_id(
+        id: int,
+        body: ScenarioPatchUpdate = Body(...),
+        session: AsyncSession = Depends(get_session)
 ):
-    ...
+    return await scenario_service.update_scenario_patch(id, session, body)
 
 
 @router.put(

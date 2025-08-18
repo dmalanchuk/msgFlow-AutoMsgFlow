@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.redis.redis_service import ServiceRedis
 from src.models.scenarios_model import ScenariosModel
-from src.schemas.scenario_schema import ScenarioCreate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioPutUpdate, ScenarioPatchUpdate
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.utils.get_chat_id import GetChatId
@@ -92,3 +92,17 @@ class ScenarioService:
             raise HTTPException(status_code=404, detail="Scenario not found")
 
         await self.scenarios_repo.delete(scenario, session)
+
+    async def update_scenario_patch(self, id: int, session: AsyncSession, body: ScenarioPatchUpdate):
+        scenario = await self.scenarios_repo.get_by_id(id, session)
+
+        if not scenario:
+            raise HTTPException(status_code=404, detail="Scenario not found")
+
+        update_data = body.dict(exclude_unset=True)
+
+        for key, value in update_data.items():
+            setattr(scenario, key, value)
+
+        update = await self.scenarios_repo.update(scenario, session)
+        return update
