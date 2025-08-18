@@ -51,5 +51,5 @@ class ScenarioPatchUpdate(BaseModel):
     chat_url: Optional[str] = None
     owner_email: Optional[str] = None
     event: Optional[EventInfo] = None
-    condition: Optional[Condition] = None
-    action: Optional[Action] = None
+    conditions: Optional[Condition] = None
+    actions: Optional[Action] = None
