@@ -74,23 +74,6 @@ async def update_param_by_id(
     return await scenario_service.update_scenario_patch(id, session, body)
 
 
-@router.put(
-    "/{name}",
-    summary="Full update scenario by name",
-    description="With this endpoint you can full update by the name of your script",
-    status_code=200,
-    responses={
-        200: {"description": "Scenario updated successfully"},
-        404: {"description": "Scenario not found"}
-    },
-)
-async def full_update_by_name(
-        name: str,
-        session: AsyncSession = Depends(get_session)
-):
-    ...
-
-
 @router.get(
     "",
     summary="Get all scenarios",
