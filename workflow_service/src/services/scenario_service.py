@@ -93,13 +93,14 @@ class ScenarioService:
 
         await self.scenarios_repo.delete(scenario, session)
 
+    # update scenario
     async def update_scenario_patch(self, id: int, session: AsyncSession, body: ScenarioPatchUpdate):
         scenario = await self.scenarios_repo.get_by_id(id, session)
 
         if not scenario:
             raise HTTPException(status_code=404, detail="Scenario not found")
 
-        update_data = body.dict(exclude_unset=True)
+        update_data = body.model_dump(exclude_unset=True)
 
         for key, value in update_data.items():
             setattr(scenario, key, value)
