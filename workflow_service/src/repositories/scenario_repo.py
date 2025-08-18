@@ -34,3 +34,17 @@ class ScenarioRepo:
     async def delete(scenario: Coroutine, session: AsyncSession):
         await session.delete(scenario)
         await session.commit()
+
+    @staticmethod
+    async def get_by_id(id: int, session: AsyncSession):
+        smtp = await session.execute(
+            select(ScenariosModel).where(ScenariosModel.id == id)
+        )
+
+        return smtp.scalars().one_or_none()
+
+    @staticmethod
+    async def update(scenario, session: AsyncSession):
+        await session.commit(scenario)
+        await session.refresh(scenario)
+        return scenario
