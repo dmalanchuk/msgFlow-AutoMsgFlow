@@ -11,7 +11,7 @@ from src.services.scenario_service import ScenarioService
 
 class ExecuteAction:
     @staticmethod
-    async def execute_actions(chat_id: int):
+    async def execute_actions(chat_id: int, message_id: int):
         async with async_session() as session:
             redis_service = ServiceRedis()
             scenario_repo = ScenarioRepo()
@@ -29,7 +29,7 @@ class ExecuteAction:
             any_action_published = False
 
             for scenario in scenarios:
-                is_condition_met = await condition_service.check_conditions_for_scenario(scenario, chat_id, session)
+                is_condition_met = await condition_service.check_conditions_for_scenario(scenario, chat_id, message_id, session)
                 if is_condition_met:
                     actions = scenario.actions
                     if not isinstance(actions, list):
@@ -37,9 +37,10 @@ class ExecuteAction:
 
                     #if action - published action in redis and action_queue
                     for action in actions:
-                        await ServiceRedis.save_action(chat_id, action)
+                        await ServiceRedis.save_action(chat_id, message_id, action)
                         await publish_action({
                             "chat_id": chat_id,
+                            "message_id": message_id,
                             "action": action
                         })
                     logger.info(f"Published {len(actions)} actions to queue and saved to Redis for chat_id={chat_id}")
