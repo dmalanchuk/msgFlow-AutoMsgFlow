@@ -1,7 +1,9 @@
+from typing import Coroutine
+
 from src.models.scenarios_model import ScenariosModel
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, and_, delete, update
 
 
 class ScenarioRepo:
@@ -20,3 +22,23 @@ class ScenarioRepo:
         await session.refresh(scenarios)
         return scenarios
 
+    @staticmethod
+    async def del_by_name(name: str, session: AsyncSession):
+        result = await session.execute(
+            delete(ScenariosModel)
+            .where(ScenariosModel.name == name)
+            .returning(ScenariosModel.id)
+        )
+        return result.scalar_one_or_none()
+
+    @staticmethod
+    async def get_by_name_email(name: str, email: str, values: dict, session: AsyncSession):
+        query = await session.execute(update(ScenariosModel).values(**values).where(
+                and_(
+                    ScenariosModel.name == name,
+                    ScenariosModel.owner_email == email
+                )
+            )
+            .returning(ScenariosModel)
+        )
+        return query.scalars().one_or_none()

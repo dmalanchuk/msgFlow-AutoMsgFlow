@@ -1,7 +1,7 @@
 from fastapi import Request, HTTPException
 
 
-class ScenarioGetEmailService:
+class GetUserEmail:
 
     @staticmethod
     def get_user_email(request: Request) -> str:

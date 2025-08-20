@@ -1,10 +1,10 @@
-from fastapi import Request
+from fastapi import Request, Body
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.schemas.scenario_schema import ScenarioCreate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioPatchUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.dependency import scenario_service
@@ -49,8 +49,11 @@ async def create_scenario(
         404: {"description": "Scenario not found"}
     },
 )
-async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get_session)):
-    ...
+async def delete_scenario_by_name(
+        name: str,
+        session: AsyncSession = Depends(get_session)
+):
+    return await scenario_service.delete_scenario(name, session)
 
 
 @router.patch(
@@ -63,19 +66,27 @@ async def delete_scenario_by_name(name: str, session: AsyncSession = Depends(get
         404: {"description": "Scenario not found"}
     },
 )
-async def update_param_by_name(name: str, session: AsyncSession = Depends(get_session)):
-    ...
+async def update_param_by_name(
+        name: str,
+        owner_email: str,
+        body: ScenarioPatchUpdate,
+        session: AsyncSession = Depends(get_session)
+):
+    return await scenario_service.update_scenario_patch(name, owner_email, body, session)
 
 
-@router.put(
-    "/{name}",
-    summary="Full update scenario by name",
-    description="With this endpoint you can full update by the name of your script",
+@router.get(
+    "",
+    summary="Get all scenarios",
+    description="endpoint for getting all scenarios",
     status_code=200,
     responses={
-        200: {"description": "Scenario updated successfully"},
         404: {"description": "Scenario not found"}
     },
 )
-async def full_update_by_name(name: str, session: AsyncSession = Depends(get_session)):
-    ...
+async def get_scenarios(
+        chat_id: int,
+        session: AsyncSession = Depends(get_session)
+):
+    # To-Do: Make to the current mail so that the user can only see their scripts
+    return await scenario_service.get_scenarios(chat_id, session)

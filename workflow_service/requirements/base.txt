@@ -1,19 +1,15 @@
 fastapi[standard]
 redis[hiredis]
 uvicorn
-
 pydantic
 pydantic-settings
-
 alembic
 sqlalchemy
-
 faststream[rabbit]
-
 psycopg2-binary
 asyncpg
-
 greenlet
+ pyjwt
 
 # =========for tests========
 # pytest, for unit test

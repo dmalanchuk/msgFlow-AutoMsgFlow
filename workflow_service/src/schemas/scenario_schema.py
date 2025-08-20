@@ -1,6 +1,5 @@
-from typing import Dict, Any, Literal
+from typing import Dict, Any, Literal, Optional
 from pydantic import BaseModel
-
 
 """
     Scenario schema haver the same structure as in the database,
@@ -39,3 +38,14 @@ class ScenarioCreate(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# scenario patch update
+
+
+class ScenarioPatchUpdate(BaseModel):
+    name: Optional[str] = None
+    chat_url: Optional[str] = None
+    event: Optional[EventInfo] = None
+    conditions: Optional[Condition] = None
+    actions: Optional[Action] = None
