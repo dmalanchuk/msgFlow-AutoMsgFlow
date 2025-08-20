@@ -56,15 +56,15 @@ class ConditionService:
 
         return False
 
-    async def check_conditions_for_scenario(self, scenario, chat_id: int, session):
+    async def check_conditions_for_scenario(self, scenario, chat_id: int, message_id, session):
         # Get last message in Redis
-        messages = await self.redis_service.get_last_messages(chat_id)
+        messages = await self.redis_service.get_message_by_id(chat_id, message_id)
         if not messages:
-            logger.warning(f"No message in Redis for chat_id={chat_id}")
+            logger.warning(f"No message in Redis for chat_id={chat_id}", message_id = {message_id})
             return False
 
-        last_message = messages[0].get("text", "")
-        logger.info(f"Last message from Redis: {last_message}")
+        last_message = messages.get("text", "")
+        logger.info(f"Message {message_id} from Redis: {last_message}")
 
         # Get condition raw
         condition_raw = scenario.conditions
