@@ -72,7 +72,7 @@ async def update_param_by_name(
         body: ScenarioPatchUpdate,
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.update_scenario_patch(name, owner_email, session)
+    return await scenario_service.update_scenario_patch(name, owner_email, body, session)
 
 
 @router.get(
