@@ -40,16 +40,12 @@ class ScenarioCreate(BaseModel):
         from_attributes = True
 
 
-# scenario put and patch update
-
-class ScenarioPutUpdate(ScenarioCreate):
-    pass
+# scenario patch update
 
 
 class ScenarioPatchUpdate(BaseModel):
     name: Optional[str] = None
     chat_url: Optional[str] = None
-    owner_email: Optional[str] = None
     event: Optional[EventInfo] = None
     conditions: Optional[Condition] = None
     actions: Optional[Action] = None
