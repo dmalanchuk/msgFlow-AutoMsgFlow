@@ -15,6 +15,6 @@ async def lifespan(_app: FastAPI):
     await broker.close()
 
 
-app = FastAPI(lifespan=lifespan ,title="Workflow Service")
+app = FastAPI(lifespan=lifespan, title="Workflow Service")
 app.include_router(router, tags=["scenarios"])
 app.include_router(router_debug, tags=["debug"])
