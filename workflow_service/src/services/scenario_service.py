@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.redis.redis_service import ServiceRedis
 from src.models.scenarios_model import ScenariosModel
-from src.schemas.scenario_schema import ScenarioCreate, ScenarioPutUpdate, ScenarioPatchUpdate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioPatchUpdate
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.utils.get_chat_id import GetChatId
@@ -86,24 +86,18 @@ class ScenarioService:
 
     # delete scenarios by name
     async def delete_scenario(self, name: str, session: AsyncSession):
-        scenario = await self.scenarios_repo.get_by_name(name, session)
+        async with session.begin():
+            scenario = await self.scenarios_repo.del_by_name(name, session)
 
-        if not scenario:
-            raise HTTPException(status_code=404, detail="Scenario not found")
-
-        await self.scenarios_repo.delete(scenario, session)
+            if not scenario:
+                raise HTTPException(status_code=404, detail="Scenario not found")
+        return {"msg": "Scenario deleted"}
 
     # update scenario
-    async def update_scenario_patch(self, id: int, session: AsyncSession, body: ScenarioPatchUpdate):
-        scenario = await self.scenarios_repo.get_by_id(id, session)
-
+    async def update_scenario_patch(self, name: str, owner_email: str, session: AsyncSession):
+        scenario = await self.scenarios_repo.get_by_name_email(name, owner_email, session)
         if not scenario:
             raise HTTPException(status_code=404, detail="Scenario not found")
 
-        update_data = body.model_dump(exclude_unset=True)
-
-        for key, value in update_data.items():
-            setattr(scenario, key, value)
-
-        update = await self.scenarios_repo.update(scenario, session)
+        update = await self.scenarios_repo.update_scenario_patch(scenario, session)
         return update
