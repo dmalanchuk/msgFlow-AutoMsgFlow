@@ -8,19 +8,19 @@ from src.services.sender import send_message
 class ExecuteActionService:
 
     @staticmethod
-    async def execute_action(chat_id: int):
-        redis_key = f"chat:{chat_id}:action"
-        action_raw = await redis.lindex(redis_key, 0)
-        if not action_raw:
-            logger.warning(f"No action found in Redis for chat_id{chat_id}")
-            return
-
-        try:
-            action_payload = json.loads(action_raw)
-            action = action_payload.get("action", {})
-        except json.JSONDecodeError:
-            logger.error(f"Incorrect json in redis for chat_id{chat_id}")
-            return
+    async def execute_action(chat_id: int, action: dict | None = None):
+        if action is None:
+            redis_key = f"chat:{chat_id}:action"
+            action_raw = await redis.lindex(redis_key, 0)
+            if not action_raw:
+                logger.warning(f"No action found in Redis for chat_id{chat_id}")
+                return
+            try:
+                action_payload = json.loads(action_raw)
+                action = action_payload.get("action", {})
+            except json.JSONDecodeError:
+                logger.error(f"Incorrect json in redis for chat_id{chat_id}")
+                return
 
 
         action_type = action.get("type")
