@@ -1,3 +1,5 @@
+import re
+
 from pydantic import json
 
 from src.repositories.scenario_repo import ScenarioRepo
@@ -85,7 +87,11 @@ class ConditionService:
         # 3. Data type processing
         if condition_type == "contains_word":
             word = condition_params.get("word", "").lower()
-            if word in last_message.lower():
+
+            cleaned = re.sub(r"[^\w\s]", "", last_message.lower())
+            words = cleaned.split()
+
+            if word in words:
                 logger.info(f"Match by contains_word: '{word}' found in '{last_message}'")
                 return True
             else:

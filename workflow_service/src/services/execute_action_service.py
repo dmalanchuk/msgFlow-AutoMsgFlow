@@ -37,11 +37,13 @@ class ExecuteAction:
                         actions = [actions]
 
                     # if action - published action in redis and action_queue
-                    for action in actions:
+                    for idx, action in enumerate(actions):
                         await ServiceRedis.save_action(chat_id, message_id, action)
+                        #added index for message
                         await publish_action({
                             "chat_id": chat_id,
                             "message_id": message_id,
+                            "index": idx,
                             "action": action
                         })
                     logger.info(f"Published {len(actions)} actions to queue and saved to Redis for chat_id={chat_id}")
