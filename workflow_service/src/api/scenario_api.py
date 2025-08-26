@@ -7,7 +7,8 @@ from src.database import get_session
 from src.schemas.scenario_schema import ScenarioCreate, ScenarioPatchUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
-from src.dependency import scenario_service
+from src.dependency import scenario_service, scenario_repo
+from src.utils.get_user_email import get_user_email
 
 router = APIRouter(prefix="/scenarios")
 
@@ -23,7 +24,7 @@ async def get_conditions_metadata():
 
 
 @router.post(
-    "",
+    "/",
     summary="Create new scenario",
     description="This endpoint allows you to create a new script by template",
     status_code=201,
@@ -76,7 +77,7 @@ async def update_param_by_name(
 
 
 @router.get(
-    "",
+    "/",
     summary="Get all scenarios",
     description="endpoint for getting all scenarios",
     status_code=200,
@@ -85,8 +86,8 @@ async def update_param_by_name(
     },
 )
 async def get_scenarios(
-        chat_id: int,
+        email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
     # To-Do: Make to the current mail so that the user can only see their scripts
-    return await scenario_service.get_scenarios(chat_id, session)
+    return await scenario_repo.get_scenario(email, session)
