@@ -89,5 +89,4 @@ async def get_scenarios(
         email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    # To-Do: Make to the current mail so that the user can only see their scripts
     return await scenario_repo.get_scenario(email, session)
