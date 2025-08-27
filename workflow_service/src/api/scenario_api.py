@@ -78,7 +78,7 @@ async def update_param_by_name(
 
 
 @router.get(
-    "/me",
+    "/list",
     summary="Get all scenarios",
     description="endpoint for getting all scenarios",
     status_code=200,
