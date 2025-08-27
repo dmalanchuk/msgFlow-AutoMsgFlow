@@ -8,19 +8,14 @@ from src.services.pattern.action_service import ActionService
 
 from src.redis.redis_service import ServiceRedis
 
-from src.utils.get_chat_id import GetChatId
-from src.utils.get_user_email import GetUserEmail
-
 # class instance - because services used DI (dependency injection)
-get_chat_id = GetChatId()
-get_user_email = GetUserEmail()
 
 # repositories
 scenario_repo = ScenarioRepo()
 
 # services
 redis_service = ServiceRedis()
-scenario_service = ScenarioService(scenario_repo, redis_service, get_user_email, get_chat_id)
+scenario_service = ScenarioService(scenario_repo, redis_service)
 
 # patterns
 event_service = EventService(redis_service, scenario_repo, scenario_service)

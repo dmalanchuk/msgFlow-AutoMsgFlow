@@ -6,23 +6,21 @@ from src.config import settings
     from private channels is not yet available
 """
 
+BOT_TOKEN = settings.TELEGRAM_TOKEN
 
-class GetChatId:
-    BOT_TOKEN = settings.TELEGRAM_TOKEN
 
-    @staticmethod
-    async def get_chat_id(chat_url: str):
-        if chat_url.startswith("https://t.me/"):
-            chat_url = chat_url.replace("https://t.me/", "@")
+async def get_chat_id(chat_url: str):
+    if chat_url.startswith("https://t.me/"):
+        chat_url = chat_url.replace("https://t.me/", "@")
 
-        url = f"https://api.telegram.org/bot{GetChatId.BOT_TOKEN}/getChat"
-        params = {"chat_id": chat_url}
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/getChat"
+    params = {"chat_id": chat_url}
 
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url, params=params)
-            data = response.json()
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, params=params)
+        data = response.json()
 
-            if not data["ok"]:
-                raise ValueError("Invalid chat url")
+        if not data["ok"]:
+            raise ValueError("Invalid chat url")
 
-            return data["result"]["id"]
+        return data["result"]["id"]

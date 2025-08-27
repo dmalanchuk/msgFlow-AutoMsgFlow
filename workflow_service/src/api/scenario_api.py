@@ -1,4 +1,4 @@
-from fastapi import Request, Body
+from fastapi import Request
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +7,8 @@ from src.database import get_session
 from src.schemas.scenario_schema import ScenarioCreate, ScenarioPatchUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
-from src.dependency import scenario_service
+from src.dependency import scenario_service, scenario_repo
+from src.utils.get_user_email import get_user_email
 
 router = APIRouter(prefix="/scenarios")
 
@@ -23,7 +24,7 @@ async def get_conditions_metadata():
 
 
 @router.post(
-    "",
+    "/scenario",
     summary="Create new scenario",
     description="This endpoint allows you to create a new script by template",
     status_code=201,
@@ -51,9 +52,10 @@ async def create_scenario(
 )
 async def delete_scenario_by_name(
         name: str,
+        owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.delete_scenario(name, session)
+    return await scenario_service.delete_scenario(name, owner_email, session)
 
 
 @router.patch(
@@ -68,15 +70,15 @@ async def delete_scenario_by_name(
 )
 async def update_param_by_name(
         name: str,
-        owner_email: str,
         body: ScenarioPatchUpdate,
+        owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
     return await scenario_service.update_scenario_patch(name, owner_email, body, session)
 
 
 @router.get(
-    "",
+    "/list",
     summary="Get all scenarios",
     description="endpoint for getting all scenarios",
     status_code=200,
@@ -85,8 +87,7 @@ async def update_param_by_name(
     },
 )
 async def get_scenarios(
-        chat_id: int,
+        email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    # To-Do: Make to the current mail so that the user can only see their scripts
-    return await scenario_service.get_scenarios(chat_id, session)
+    return await scenario_repo.get_scenario(email, session)

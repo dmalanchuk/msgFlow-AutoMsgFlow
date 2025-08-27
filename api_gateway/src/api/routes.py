@@ -50,3 +50,22 @@ async def scenarios_proxy_post(
 ):
     url = f"{settings.WORKFLOW_SERVICE_URL}/scenarios/{path}"
     return await proxy_request(request, url)
+
+
+@router.patch("/scenarios/{path:path}")
+async def scenarios_proxy_patch(
+        path: str,
+        request: Request,
+        json_body: Optional[dict] = Body(default=None)
+):
+    url = f"{settings.WORKFLOW_SERVICE_URL}/scenarios/{path}"
+    return await proxy_request(request, url)
+
+
+@router.delete("/scenarios/{path:path}")
+async def scenarios_proxy_delete(
+    path: str, 
+    request: Request
+):
+    url = f"{settings.WORKFLOW_SERVICE_URL}/scenarios/{path}"
+    return await proxy_request(request, url)
