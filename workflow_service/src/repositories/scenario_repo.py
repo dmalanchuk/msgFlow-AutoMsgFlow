@@ -28,10 +28,15 @@ class ScenarioRepo:
         return scenarios
 
     @staticmethod
-    async def del_by_name(name: str, session: AsyncSession):
+    async def del_by_name(name: str, owner_email: str, session: AsyncSession):
         result = await session.execute(
             delete(ScenariosModel)
-            .where(ScenariosModel.name == name)
+            .where(
+                and_(
+                    ScenariosModel.name == name,
+                    ScenariosModel.owner_email == owner_email
+                )
+            )
             .returning(ScenariosModel.id)
         )
         return result.scalar_one_or_none()
@@ -39,11 +44,11 @@ class ScenarioRepo:
     @staticmethod
     async def get_by_name_email(name: str, email: str, values: dict, session: AsyncSession):
         query = await session.execute(update(ScenariosModel).values(**values).where(
-                and_(
-                    ScenariosModel.name == name,
-                    ScenariosModel.owner_email == email
-                )
+            and_(
+                ScenariosModel.name == name,
+                ScenariosModel.owner_email == email
             )
-            .returning(ScenariosModel)
         )
+                                      .returning(ScenariosModel)
+                                      )
         return query.scalars().one_or_none()

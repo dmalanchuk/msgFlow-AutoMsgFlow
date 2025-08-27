@@ -80,9 +80,9 @@ class ScenarioService:
         return to_cache
 
     # delete scenarios by name
-    async def delete_scenario(self, name: str, session: AsyncSession):
+    async def delete_scenario(self, name: str, owner_email: str, session: AsyncSession):
         async with session.begin():
-            scenario = await self.scenarios_repo.del_by_name(name, session)
+            scenario = await self.scenarios_repo.del_by_name(name, owner_email, session)
 
             if not scenario:
                 raise HTTPException(status_code=404, detail="Scenario not found")

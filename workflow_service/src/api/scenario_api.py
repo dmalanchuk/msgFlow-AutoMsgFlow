@@ -1,4 +1,4 @@
-from fastapi import Request, Body
+from fastapi import Request
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +24,7 @@ async def get_conditions_metadata():
 
 
 @router.post(
-    "/",
+    "/scenario",
     summary="Create new scenario",
     description="This endpoint allows you to create a new script by template",
     status_code=201,
@@ -52,9 +52,10 @@ async def create_scenario(
 )
 async def delete_scenario_by_name(
         name: str,
+        owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.delete_scenario(name, session)
+    return await scenario_service.delete_scenario(name, owner_email, session)
 
 
 @router.patch(
@@ -69,15 +70,15 @@ async def delete_scenario_by_name(
 )
 async def update_param_by_name(
         name: str,
-        owner_email: str,
         body: ScenarioPatchUpdate,
+        owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
     return await scenario_service.update_scenario_patch(name, owner_email, body, session)
 
 
 @router.get(
-    "/",
+    "/me",
     summary="Get all scenarios",
     description="endpoint for getting all scenarios",
     status_code=200,
