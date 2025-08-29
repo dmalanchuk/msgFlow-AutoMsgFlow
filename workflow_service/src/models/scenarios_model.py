@@ -25,3 +25,15 @@ class ScenariosModel(Base):
     #     nullable=False,
     #     doc="JSON structure: { 'type': str, 'params': dict }"
     # )
+
+
+class EventsModel(Base):
+    __tablename__ = "events"
+
+
+class ConditionsModel(Base):
+    __tablename__ = "conditions"
+
+
+class ActionsModel(Base):
+    __tablename__ = "actions"
