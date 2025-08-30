@@ -43,12 +43,13 @@ class ScenarioRepo:
 
     @staticmethod
     async def get_by_name_email(name: str, email: str, values: dict, session: AsyncSession):
-        query = await session.execute(update(ScenariosModel).values(**values).where(
-            and_(
-                ScenariosModel.name == name,
-                ScenariosModel.owner_email == email
+        query = await session.execute(
+            update(ScenariosModel).values(**values).where(
+                and_(
+                    ScenariosModel.name == name,
+                    ScenariosModel.owner_email == email
+                )
             )
+            .returning(ScenariosModel)
         )
-                                      .returning(ScenariosModel)
-                                      )
         return query.scalars().one_or_none()
