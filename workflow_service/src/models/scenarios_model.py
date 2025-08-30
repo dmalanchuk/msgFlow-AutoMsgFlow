@@ -1,6 +1,7 @@
 from src.database import Base
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import BigInteger, JSON, ForeignKey, UniqueConstraint
+from sqlalchemy import BigInteger, ForeignKey, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB
 
 
 class ScenariosModel(Base):
@@ -20,7 +21,7 @@ class EventsModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     scenario_id: Mapped[int] = mapped_column(ForeignKey("scenarios.id", ondelete="CASCADE"))
     type: Mapped[str] = mapped_column(nullable=False)
-    params: Mapped[JSON] = mapped_column(JSON, nullable=False)
+    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
 
 
 class ConditionsModel(Base):
@@ -29,7 +30,7 @@ class ConditionsModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     scenario_id: Mapped[int] = mapped_column(ForeignKey("scenarios.id", ondelete="CASCADE"))
     type: Mapped[str] = mapped_column(nullable=False)
-    params: Mapped[JSON] = mapped_column(JSON, nullable=False)
+    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
 
 
 class ActionsModel(Base):
@@ -38,4 +39,4 @@ class ActionsModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     scenario_id: Mapped[int] = mapped_column(ForeignKey("scenarios.id", ondelete="CASCADE"))
     type: Mapped[str] = mapped_column(nullable=False)
-    params: Mapped[JSON] = mapped_column(JSON, nullable=False)
+    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
