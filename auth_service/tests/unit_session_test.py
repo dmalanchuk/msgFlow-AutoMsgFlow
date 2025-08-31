@@ -56,3 +56,20 @@ async def test_user_not_found():
 
         assert exception.value.status_code == 401
         assert exception.value.detail == "User not found"
+
+
+@pytest.mark.asyncio
+async def test_session_incorrect_pass():
+    fake_session = AsyncMock()
+
+    login_data = LoginUser(email="mini@gmail.com", password="wrong_password")
+    response = Response()
+
+    with patch("src.services.login_service.LoginRepo.login_user_repo", new=AsyncMock()) as mock_incrct_password:
+        mock_incrct_password.side_effect = HTTPException(status_code=401, detail="Incorrect password")
+
+        with pytest.raises(HTTPException) as exception:
+            await LoginService.login_user_service(login_data, response, session=fake_session)
+
+        assert exception.value.status_code == 401
+        assert exception.value.detail == "Incorrect password"
