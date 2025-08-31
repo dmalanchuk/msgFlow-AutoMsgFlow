@@ -21,7 +21,7 @@ class EventsModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     scenario_id: Mapped[int] = mapped_column(ForeignKey("scenarios.id", ondelete="CASCADE"))
     type: Mapped[str] = mapped_column(nullable=False)
-    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    source: Mapped[str] = mapped_column(nullable=False)
 
 
 class ConditionsModel(Base):
