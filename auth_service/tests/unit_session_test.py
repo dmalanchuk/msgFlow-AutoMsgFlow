@@ -1,8 +1,7 @@
-from http.client import responses, HTTPException
 from unittest.mock import MagicMock, AsyncMock, patch, ANY
 
 import pytest
-from fastapi import Response
+from fastapi import Response, HTTPException
 from src.schemas.user_schema import LoginUser
 from src.services.login_service import LoginService
 
@@ -44,12 +43,16 @@ async def test_user_session_success():
 
 @pytest.mark.asyncio
 async def test_user_not_found():
+    fake_session = AsyncMock()
 
     login_data = LoginUser(email="mini@gmail.com", password="111qwe111")
     response = Response()
 
-    with patch("src.services.login_service.LoginRepo.login_user_repo", new=AsyncMock) as mock_login_repo:
+    with patch("src.services.login_service.LoginRepo.login_user_repo", new=AsyncMock()) as mock_login_repo:
         mock_login_repo.side_effect = HTTPException(status_code=401, detail="User not found")
 
         with pytest.raises(HTTPException) as exception:
-            await LoginService.login_user_service(login_data, response, session=AsyncMock())
+            await LoginService.login_user_service(login_data, response, session=fake_session)
+
+        assert exception.value.status_code == 401
+        assert exception.value.detail == "User not found"
