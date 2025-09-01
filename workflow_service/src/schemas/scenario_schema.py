@@ -11,8 +11,12 @@ class ParamsContainsWord(BaseModel):
     word: str = Field(..., min_length=1, description="Key word for executing action")
 
 
+class ParamsSendMessage(BaseModel):
+    text: str = Field(..., min_length=1, max_length=40, description="Text for sending message")
+
+
 class ScenarioCreate(BaseModel):
-    name: str = Field(..., min_length=1,  max_length=16)
+    name: str = Field(..., min_length=1, max_length=16)
     chat_url: str
     owner_email: EmailStr
 
@@ -21,7 +25,7 @@ class ScenarioCreate(BaseModel):
 
 
 class EventCreate(BaseModel):
-    type: Literal["message_received", "user_joined", "user_left", "new_post"]
+    type: Literal["message_received"]
     source: Literal["telegram"]
 
 
@@ -31,8 +35,8 @@ class ConditionCreate(BaseModel):
 
 
 class ActionCreate(BaseModel):
-    type: Literal["send_message", "forward"]
-    params: dict[str, Any]
+    type: Literal["send_message"]
+    params: ParamsSendMessage
 
 
 class ScenarioUpdate(BaseModel):
