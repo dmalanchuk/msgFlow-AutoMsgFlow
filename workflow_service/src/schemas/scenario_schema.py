@@ -1,8 +1,8 @@
 from typing import Any, Literal, Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 import re
 
-LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z]+$")
+LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z ]+$")
 
 """"""
 
@@ -19,6 +19,12 @@ class ScenarioCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=16)
     chat_url: str
     owner_email: EmailStr
+
+    @field_validator("name")
+    def validate_name(cls, name: str) -> str:
+        if not LETTER_MATCH_PATTERN.match(name):
+            raise ValueError("Name must contain only letters")
+        return name
 
     class Config:
         from_attributes = True
