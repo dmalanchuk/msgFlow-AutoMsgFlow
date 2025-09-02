@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 import re
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z ]+$")
+ALLOWED_DOMAINS = ["gmail.com", "ukr.net"]
 
 
 class ParamsContainsWord(BaseModel):
@@ -42,6 +43,13 @@ class ScenarioCreate(BaseModel):
         if not LETTER_MATCH_PATTERN.match(name):
             raise ValueError("Name must contain only letters")
         return name
+
+    @field_validator("owner_email")
+    def validate_owner_email(cls, email: EmailStr) -> EmailStr:
+        domain = str(email).rpartition("@")[2].lower()
+        if domain not in ALLOWED_DOMAINS:
+            raise ValueError("Email must be from gmail.com or ukr.net")
+        return email
 
     class Config:
         from_attributes = True
