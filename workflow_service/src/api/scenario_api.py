@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.schemas.scenario_schema import ScenarioCreate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.dependency import scenario_service, scenario_repo
@@ -58,23 +58,23 @@ async def delete_scenario_by_name(
     return await scenario_service.delete_scenario(name, owner_email, session)
 
 
-# @router.patch(
-#     "/{name}",
-#     summary="Update scenario by name",
-#     description="With this endpoint you can update some params by the name of your script",
-#     status_code=200,
-#     responses={
-#         200: {"description": "Scenario updated successfully"},
-#         404: {"description": "Scenario not found"}
-#     },
-# )
-# async def update_param_by_name(
-#         name: str,
-#         body: ScenarioPatchUpdate,
-#         owner_email: str = Depends(get_user_email),
-#         session: AsyncSession = Depends(get_session)
-# ):
-#     return await scenario_service.update_scenario_patch(name, owner_email, body, session)
+@router.patch(
+    "/{name}",
+    summary="Update scenario by name",
+    description="With this endpoint you can update some params by the name of your script",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario updated successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def update_param_by_name(
+        name: str,
+        body: ScenarioUpdate,
+        owner_email: str = Depends(get_user_email),
+        session: AsyncSession = Depends(get_session)
+):
+    return await scenario_service.update_scenario_patch(name, owner_email, body, session)
 
 
 @router.get(

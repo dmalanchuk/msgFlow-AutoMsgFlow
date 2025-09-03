@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.redis.redis_service import ServiceRedis
 from src.models.scenarios_model import ScenariosModel, EventsModel, ConditionsModel, ActionsModel
-from src.schemas.scenario_schema import ScenarioCreate
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate
 
 from src.repositories.scenario_repo import ScenarioRepo
 from src.utils.get_chat_id import get_chat_id
@@ -97,18 +97,18 @@ class ScenarioService:
         return {"msg": "Scenario deleted"}
 
     # update scenario
-    # async def update_scenario_patch(self, name: str, owner_email: str, body: ScenarioPatchUpdate,
-    #                                 session: AsyncSession):
-    #     async with session.begin():
-    #         body = body.model_dump(exclude_none=True)
-    #
-    #         if not body:
-    #             raise HTTPException(
-    #                 status_code=400, detail="Invalid request. Body cannot be empty"
-    #             )
-    #
-    #         scenario = await self.scenarios_repo.get_by_name_email(name, owner_email, body, session)
-    #         if not scenario:
-    #             raise HTTPException(status_code=404, detail="Scenario not found")
-    #
-    #     return {"msg": "Scenario updated"}
+    async def update_scenario_patch(self, name: str, owner_email: str, body: ScenarioUpdate,
+                                    session: AsyncSession):
+        async with session.begin():
+            body = body.model_dump(exclude_none=True)
+
+            if not body:
+                raise HTTPException(
+                    status_code=400, detail="Invalid request. Body cannot be empty"
+                )
+
+            scenario = await self.scenarios_repo.get_by_name_email(name, owner_email, body, session)
+            if not scenario:
+                raise HTTPException(status_code=404, detail="Scenario not found")
+
+        return {"msg": "Scenario updated"}
