@@ -1,7 +1,3 @@
-from src.redis.redis_service import ServiceRedis
-from src.repositories.scenario_repo import ScenarioRepo
-from src.services.scenario_service import ScenarioService
-
 from src.logger import logger
 
 from src.schemas.event_schema import Event
@@ -10,16 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class EventService:
-    def __init__(
-            self,
-            redis_service: ServiceRedis,
-            scenario_repo: ScenarioRepo,
-            scenario_service: ScenarioService
-    ):
-        self.redis_service = redis_service
-        self.scenario_repo = scenario_repo
-        self.scenario_service = scenario_service
-
     async def check_event(
             self,
             chat_id: int

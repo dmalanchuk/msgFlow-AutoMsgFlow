@@ -7,8 +7,13 @@ from src.database import get_session
 from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
-from src.dependency import scenario_service, scenario_repo
 from src.utils.get_user_email import get_user_email
+
+from src.services.scenario_service import (
+    create_scenario_service, delete_scenario_service, update_scenario_patch
+)
+
+from src.repositories.scenario_repo import get_scenario_repo
 
 router = APIRouter(prefix="/scenarios")
 
@@ -38,7 +43,7 @@ async def create_scenario(
         data: ScenarioCreate,
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.create_scenario(session, data, request)
+    return await create_scenario_service(session, data, request)
 
 
 @router.delete(
@@ -55,7 +60,7 @@ async def delete_scenario_by_name(
         owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.delete_scenario(name, owner_email, session)
+    return await delete_scenario_service(name, owner_email, session)
 
 
 @router.patch(
@@ -74,7 +79,7 @@ async def update_param_by_name(
         owner_email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_service.update_scenario_patch(name, owner_email, body, session)
+    return await update_scenario_patch(name, owner_email, body, session)
 
 
 @router.get(
@@ -90,4 +95,4 @@ async def get_scenarios(
         email: str = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await scenario_repo.get_scenario(email, session)
+    return await get_scenario_repo(email, session)

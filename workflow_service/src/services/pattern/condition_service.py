@@ -2,10 +2,7 @@ import re
 
 from pydantic import json
 
-from src.repositories.scenario_repo import ScenarioRepo
-from src.services.scenario_service import ScenarioService
 from src.services.pattern.event_service import EventService
-from src.redis.redis_service import ServiceRedis
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,15 +12,9 @@ from src.logger import logger
 class ConditionService:
     def __init__(
             self,
-            redis_service: ServiceRedis,
             event_service: EventService,
-            scenario_repo: ScenarioRepo,
-            scenario_service: ScenarioService,
     ):
-        self.redis_service = redis_service
         self.event_service = event_service
-        self.scenario_repo = scenario_repo
-        self.scenario_service = scenario_service
 
     async def check_conditions(
             self,
@@ -62,7 +53,7 @@ class ConditionService:
         # Get last message in Redis
         messages = await self.redis_service.get_message_by_id(chat_id, message_id)
         if not messages:
-            logger.warning(f"No message in Redis for chat_id={chat_id}", message_id = {message_id})
+            logger.warning(f"No message in Redis for chat_id={chat_id}", message_id={message_id})
             return False
 
         last_message = messages.get("text", "")
