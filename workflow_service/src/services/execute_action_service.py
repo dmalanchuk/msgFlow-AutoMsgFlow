@@ -8,7 +8,7 @@ from src.utils.get_user_email import get_user_email
 from src.utils.get_chat_id import get_chat_id
 
 from src.repositories.scenario_repo import (
-    get_scenarios
+    get_scenarios_all
 )
 
 from src.redis.redis_service import save_action
@@ -21,7 +21,7 @@ class ExecuteAction:
             event_service = EventService()
             condition_service = ConditionService(event_service)
 
-            scenarios = await get_scenarios(chat_id, session)
+            scenarios = await get_scenarios_all(chat_id, session)
             if not scenarios:
                 logger.warning(f"No scenarios found for chat_id={chat_id}")
                 return
