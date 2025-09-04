@@ -11,5 +11,6 @@ async def hash_password(password: str) -> str:
     return await loop.run_in_executor(executor, pwd_context.hash, password)
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+async def verify_password(plain_password: str, hashed_password: str) -> bool:
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(executor, pwd_context.verify,plain_password, hashed_password)
