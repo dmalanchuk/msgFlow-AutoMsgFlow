@@ -1,19 +1,22 @@
 import json
 
 from fastapi import Request, HTTPException
+from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.redis.redis_service import (
-    set_raw, get_raw,
-)
-from src.models.scenarios_model import ScenariosModel, EventsModel, ConditionsModel, ActionsModel
-from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate
-from src.repositories.scenario_repo import (
-    create_scenario_repo, del_by_name, get_by_name_email, get_scenarios
-)
 
 from src.utils.get_chat_id import get_chat_id
 from src.utils.get_user_email import get_user_email
+
+from src.models.scenarios_model import ScenariosModel, EventsModel, ConditionsModel, ActionsModel
+from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate, EventCreate, ConditionCreate, ActionCreate
+from src.schemas.scenario_redis_schema import ScenarioRedisGet
+
+from src.repositories.scenario_repo import (
+    create_scenario_repo, del_by_name, update_by_name, get_scenarios_all
+)
+from src.redis.redis_service import (
+    set_raw, get_raw,
+)
 
 """
     Business logic service for processing, creating, 
@@ -54,35 +57,42 @@ async def create_scenario_service(
     return await create_scenario_repo(session, new_scenario)
 
 
-# needs refactoring: get scenarios
+#
 async def get_scenarios_service(
-        chat_id: int,
+        email: EmailStr,
         session: AsyncSession,
-        ttl: int = 1000
 ):
-    key = f"chat:{chat_id}:scenarios"
+    key = f"chat:{email}:scenarios"
 
     cached = await get_raw(key)
     if cached:
-        return json.loads(cached)
+        return ScenarioRedisGet.model_validate_json(cached)
 
-    scenarios = await get_scenarios(chat_id, session)
+    scenarios = await get_scenarios_all(email, session)
 
-    to_cache = []
-    for scenario in scenarios:
-        to_cache.append({
-            "chat_id": scenario.chat_id,
-            "event": scenario.event,
-            "conditions": scenario.conditions,
-            "actions": scenario.actions
-        })
+    _to_cache = [
+        ScenarioRedisGet(
+            name=scenario.name,
+            chat_id=scenario.chat_id,
+            event=[
+                EventCreate.model_validate(e) for e in scenario.events
+            ],
+            condition=[
+                ConditionCreate.model_validate(c) for c in scenario.conditions
+            ],
+            action=[
+                ActionCreate.model_validate(a) for a in scenario.actions
+            ],
+        )
+        for scenario in scenarios
+    ]
 
-    await set_raw(key, json.dumps(to_cache), ttl)
-    return to_cache
+    await set_raw(key, json.dumps([s.model_dump() for s in _to_cache]))
+    return _to_cache
 
 
 # delete scenarios by name
-async def delete_scenario_service(name: str, owner_email: str, session: AsyncSession):
+async def delete_scenario_service(name: str, owner_email: EmailStr, session: AsyncSession):
     async with session.begin():
         scenario = await del_by_name(name, owner_email, session)
 
@@ -92,7 +102,7 @@ async def delete_scenario_service(name: str, owner_email: str, session: AsyncSes
 
 
 # update scenario
-async def update_scenario_patch(name: str, owner_email: str, body: ScenarioUpdate,
+async def update_scenario_patch(name: str, owner_email: EmailStr, body: ScenarioUpdate,
                                 session: AsyncSession):
     async with session.begin():
         body = body.model_dump(exclude_none=True)
@@ -102,7 +112,7 @@ async def update_scenario_patch(name: str, owner_email: str, body: ScenarioUpdat
                 status_code=400, detail="Invalid request. Body cannot be empty"
             )
 
-        scenario = await get_by_name_email(name, owner_email, body, session)
+        scenario = await update_by_name(name, owner_email, body, session)
         if not scenario:
             raise HTTPException(status_code=404, detail="Scenario not found")
 
