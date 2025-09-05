@@ -19,15 +19,24 @@ class EventCreate(BaseModel):
     type: Literal["message_received"]
     source: Literal["telegram"]
 
+    class Config:
+        from_attributes = True
+
 
 class ConditionCreate(BaseModel):
     type: Literal["contains_word"]
     params: ParamsContainsWord
 
+    class Config:
+        from_attributes = True
+
 
 class ActionCreate(BaseModel):
     type: Literal["send_message"]
     params: ParamsSendMessage
+
+    class Config:
+        from_attributes = True
 
 
 class ScenarioCreate(BaseModel):
