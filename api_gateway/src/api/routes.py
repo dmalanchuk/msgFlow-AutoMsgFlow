@@ -18,6 +18,10 @@ async def auth_proxy_get(path: str, request: Request):
     url = f"{settings.AUTH_SERVICE_URL}/auth/{path}"
     return await proxy_request(request, url)
 
+@router.delete("/auth/{path:path}")
+async def auth_proxy_delete(path:str, request: Request):
+    url = f"{settings.AUTH_SERVICE_URL}/auth/{path}"
+    return await proxy_request(request, url)
 
 @router.post("/auth/{path:path}")
 async def auth_proxy_with_body(
