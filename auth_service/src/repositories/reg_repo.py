@@ -11,10 +11,13 @@ class RegUser:
 
     @staticmethod
     async def get_by_email(email: EmailStr, session: AsyncSession):
-        result = await session.execute(
+        # result = await session.execute(
+        #     select(UserModel).where(UserModel.email == email)
+        # )
+        # return result.scalars().first()
+        return await session.scalar(
             select(UserModel).where(UserModel.email == email)
         )
-        return result.scalars().first()
 
     @staticmethod
     async def create_user(user: UserModel, session: AsyncSession):
