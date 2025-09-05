@@ -11,8 +11,8 @@ from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.utils.get_user_email import get_user_email
 
 from src.services.scenario_service import (
-    create_scenario_service, delete_scenario_service, update_scenario_patch,
-    get_scenarios_service
+    create_scenario_service, delete_scenario_service,
+    update_scenario_patch, get_scenarios_service
 )
 
 router = APIRouter(prefix="/scenarios")
@@ -57,7 +57,7 @@ async def create_scenario(
 )
 async def delete_scenario_by_name(
         name: str,
-        owner_email: str = Depends(get_user_email),
+        owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
     return await delete_scenario_service(name, owner_email, session)
@@ -76,7 +76,7 @@ async def delete_scenario_by_name(
 async def update_param_by_name(
         name: str,
         body: ScenarioUpdate,
-        owner_email: str = Depends(get_user_email),
+        owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
     return await update_scenario_patch(name, owner_email, body, session)
