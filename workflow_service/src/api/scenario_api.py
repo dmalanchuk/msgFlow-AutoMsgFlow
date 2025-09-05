@@ -1,6 +1,7 @@
 from fastapi import Request
 
 from fastapi import APIRouter, Depends
+from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
@@ -10,10 +11,9 @@ from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.utils.get_user_email import get_user_email
 
 from src.services.scenario_service import (
-    create_scenario_service, delete_scenario_service, update_scenario_patch
+    create_scenario_service, delete_scenario_service, update_scenario_patch,
+    get_scenarios_service
 )
-
-from src.repositories.scenario_repo import get_scenario_repo
 
 router = APIRouter(prefix="/scenarios")
 
@@ -92,7 +92,7 @@ async def update_param_by_name(
     },
 )
 async def get_scenarios(
-        email: str = Depends(get_user_email),
+        email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await get_scenario_repo(email, session)
+    return await get_scenarios_service(email, session)
