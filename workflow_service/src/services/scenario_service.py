@@ -93,17 +93,20 @@ async def get_scenarios_service(
 
 # delete scenarios by name
 async def delete_scenario_service(name: str, owner_email: EmailStr, session: AsyncSession):
-    async with session.begin():
-        scenario = await del_by_name(name, owner_email, session)
+    scenario = await del_by_name(name, owner_email, session)
 
-        if not scenario:
-            raise HTTPException(status_code=404, detail="Scenario not found")
+    if not scenario:
+        raise HTTPException(status_code=404, detail="Scenario not found")
     return {"msg": "Scenario deleted"}
 
 
 # update scenario
-async def update_scenario_patch(name: str, owner_email: EmailStr, body: ScenarioUpdate,
-                                session: AsyncSession):
+async def update_scenario_patch(
+        name: str,
+        owner_email: EmailStr,
+        body: ScenarioUpdate,
+        session: AsyncSession
+):
     async with session.begin():
         body = body.model_dump(exclude_none=True)
 
