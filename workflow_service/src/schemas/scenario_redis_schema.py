@@ -8,3 +8,6 @@ class ScenarioRedisGet(BaseModel):
     event: list[EventCreate]
     condition: list[ConditionCreate]
     action: list[ActionCreate]
+
+    class Config:
+        from_attributes = True
