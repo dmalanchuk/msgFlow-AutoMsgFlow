@@ -9,7 +9,7 @@ faststream[rabbit]
 psycopg2-binary
 asyncpg
 greenlet
- pyjwt
+pyjwt
 
 # =========for tests========
 # pytest, for unit test
