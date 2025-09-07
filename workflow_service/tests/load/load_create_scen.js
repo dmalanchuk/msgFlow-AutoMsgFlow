@@ -1,88 +1,36 @@
-// import http from "k6/http";
-// import { check, sleep } from "k6";
-//
-// // Налаштування навантаження
-// export const options = {
-//   vus: 1,         // кількість віртуальних користувачів
-//   duration: "30s", // час тесту
-// };
-//
-// // Список дозволених доменів для owner_email
-// const DOMAINS = ["gmail.com", "ukr.net"];
-//
-// function randomEmail(uid) {
-//   const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
-//   return `user${uid}@${domain}`;
-// }
-//
-// export default function () {
-//   // Унікальний ідентифікатор для генерації унікальних даних
-//   const uid = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
-//
-//   const payload = JSON.stringify({
-//     name: `scenario`,
-//     chat_url: "https://t.me/testingmsgflow",
-//     owner_email: randomEmail(uid),
-//     event: [
-//       {
-//         type: "message_received",
-//         source: "telegram",
-//       },
-//     ],
-//     conditions: [
-//       {
-//         type: "contains_word",
-//         params: {
-//           word: `word-${uid}`,
-//         },
-//       },
-//     ],
-//     actions: [
-//       {
-//         type: "send_message",
-//         params: {
-//           text: `new post ${uid}`,
-//         },
-//       },
-//     ],
-//   });
-//
-//   const headers = {
-//     "Content-Type": "application/json",
-//     Accept: "application/json",
-//       "Cookie": "token=<eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5paWwubWFyeXN5a0BnbWFpbC5jb20iLCJleHAiOjE3NTk3ODE5ODl9.dMFNWlC7hpHdqJT_X5iTQAkKsyZdSeIOM2O-xhPV5U0>"
-//   };
-//
-//   // Відправка POST-запиту
-//   const res = http.post("http://127.0.0.1:8000/scenarios/scenario", payload, {
-//     headers,
-//   });
-//
-//   check(res, {
-//     "status is 201": (r) => r.status === 201,
-//   });
-//
-//   sleep(1);
-// }
-
-
-
-
-
-
 import http from "k6/http";
 import { check, sleep } from "k6";
+import { decode as base64Decode } from "k6/encoding";
 
-// Налаштування навантаження
 export const options = {
-  vus: 5,          // кількість віртуальних користувачів
-  duration: "30s", // час тесту
+  vus: 100,
+  duration: "30s",
 };
 
-// Список дозволених доменів для owner_email
-const DOMAINS = ["gmail.com", "ukr.net"];
+// --- Підстав свій refresh токен сюди ---
+const REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5paWwubWFyeXN5a0BnbWFpbC5jb20iLCJleHAiOjE3NTk3ODE5ODl9.dMFNWlC7hpHdqJT_X5iTQAkKsyZdSeIOM2O-xhPV5U0";
 
-// Генерація випадкових букв
+
+// --- Безпечне парсування JWT ---
+function parseJwt(token) {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return { sub: "daniil.marysyk@gmail.com" };
+
+    const base64Url = parts[1];
+    const jsonPayload = base64Decode(base64Url, "base64");
+    if (!jsonPayload) return { sub: "daniil.marysyk@gmail.com" };
+
+    const obj = JSON.parse(jsonPayload);
+    return obj && obj.sub ? obj : { sub: "daniil.marysyk@gmail.com" };
+  } catch (e) {
+    return { sub: "daniil.marysyk@gmail.com" };
+  }
+}
+
+const email = parseJwt(REFRESH_TOKEN).sub;
+
+// --- Генерація випадкових назв ---
 function randomLetters(length) {
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let result = "";
@@ -92,63 +40,34 @@ function randomLetters(length) {
   return result;
 }
 
-// Генерація випадкових email
-function randomEmail() {
-  const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
-  const uid = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-  return `user${uid}@${domain}`;
-}
-
-// --- setup(): логін один раз ---
-export function setup() {
-  const loginPayload = JSON.stringify({
-    email: "daniil.marysyk@gmail.com", // свій тестовий користувач
-    password: "qwe123qwe"
-  });
-
-  const loginRes = http.post("http://127.0.0.1:8000/auth/login", loginPayload, {
-    headers: { "Content-Type": "application/json" }
-  });
-
-  check(loginRes, { "login status is 200": (r) => r.status === 200 });
-
-  const token = loginRes.cookies.token[0].value;
-  const email = loginRes.json().email || "user@example.com";
-
-  return { token, email };
-}
-
-// --- default function: використання токена ---
-export default function (data) {
-  const scenarioName = randomLetters(16); // назва 1-16 букв
+// --- Створення payload для сценарію ---
+function createScenarioPayload() {
   const uid = Date.now();
+  const name = randomLetters(Math.floor(Math.random() * 16) + 1);
 
-  const scenarioPayload = JSON.stringify({
-    name: scenarioName,
+  return JSON.stringify({
+    name: name,
     chat_url: "https://t.me/testingmsgflow",
-    owner_email: data.email,
-    event: [
-      { type: "message_received", source: "telegram" }
-    ],
-    conditions: [
-      { type: "contains_word", params: { word: `word-${uid}` } }
-    ],
-    actions: [
-      { type: "send_message", params: { text: `new post ${uid}` } }
-    ]
+    owner_email: email,
+    event: [{ type: "message_received", source: "telegram" }],
+    conditions: [{ type: "contains_word", params: { word: `word-${uid}` } }],
+    actions: [{ type: "send_message", params: { text: `new post ${uid}` } }],
   });
+}
+
+// --- Основна функція k6 ---
+export default function () {
+  const payload = createScenarioPayload();
 
   const headers = {
     "Content-Type": "application/json",
     Accept: "application/json",
-    "Cookie": `token=${data.token}`
+    "Cookie": `refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW5paWwubWFyeXN5a0BnbWFpbC5jb20iLCJleHAiOjE3NTk3ODE5ODl9.dMFNWlC7hpHdqJT_X5iTQAkKsyZdSeIOM2O-xhPV5U0`,
   };
 
-  const res = http.post("http://127.0.0.1:8000/scenarios/scenario", scenarioPayload, { headers });
+  const res = http.post("http://127.0.0.1:8000/scenarios/scenario", payload, { headers });
 
-  check(res, {
-    "status is 201": (r) => r.status === 201
-  });
+  check(res, { "status is 201": (r) => r.status === 201 });
 
   sleep(1);
 }
