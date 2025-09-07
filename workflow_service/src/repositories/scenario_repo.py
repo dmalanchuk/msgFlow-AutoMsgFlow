@@ -1,6 +1,7 @@
 from pydantic import EmailStr
 
 from src.models.scenarios_model import ScenariosModel
+from src.schemas.scenario_schema import ScenarioUpdate
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -37,19 +38,21 @@ async def create_scenario_repo(session: AsyncSession, scenarios: ScenariosModel)
 
 
 async def del_by_name(name: str, owner_email: EmailStr, session: AsyncSession):
-    result = await session.execute(
-        delete(ScenariosModel)
-        .where(
-            and_(
-                ScenariosModel.name == name,
-                ScenariosModel.owner_email == owner_email
+    async with session.begin():
+        result = await session.execute(
+            delete(ScenariosModel)
+            .where(
+                and_(
+                    ScenariosModel.name == name,
+                    ScenariosModel.owner_email == owner_email
+                )
             )
+            .returning(ScenariosModel.id)
         )
-        .returning(ScenariosModel.id)
-    )
     return result.scalar_one_or_none()
 
 
+# needs refactoring
 async def update_by_name(name: str, email: EmailStr, values: dict, session: AsyncSession):
     query = await session.execute(
         update(ScenariosModel).values(**values).where(
@@ -58,6 +61,5 @@ async def update_by_name(name: str, email: EmailStr, values: dict, session: Asyn
                 ScenariosModel.owner_email == email
             )
         )
-        .returning(ScenariosModel)
     )
     return query.scalars().one_or_none()
