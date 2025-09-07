@@ -55,7 +55,7 @@ async def login_user(
     "/logout",
     summary="Logout user",
     description="Used to logout user",
-    status_code=200,
+    status_code=204,
     responses={
         401: {"description": "Refresh token required"},
     }

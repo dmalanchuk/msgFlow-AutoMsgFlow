@@ -2,16 +2,16 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export let options = {
-  vus: 1,         // кількість одночасних користувачів
-  duration: '60s' // час тесту
+  vus: 150,         // кількість одночасних користувачів
+  duration: '20s' // час тесту
 };
 
 export default function () {
   let randomNum = Math.floor(Math.random() * 1000000);
   let payload = JSON.stringify({
-    email: `daniil.marysyk@gmail.com`,
-    username: `daniil`,
-    password: 'qwe123qwe'
+    email: `user${randomNum}@example.com`,
+    username: `test${randomNum}`,
+    password: 'testings'
   });
 
   let params = {
