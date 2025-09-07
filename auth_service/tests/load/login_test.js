@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export let options = {
-  vus: 100,         // кількість одночасних користувачів
+  vus: 1,         // кількість одночасних користувачів
   duration: '20s' // час тесту
 };
 
@@ -13,8 +13,8 @@ export default function () {
     let i = Math.floor(Math.random() * users) + 1;
 
     let payload = JSON.stringify({
-        email: `user${i}@example.com`,
-        password: '111pass111'
+        email: `daniil.marysyk@gmail.com`,
+        password: 'qwe123qwe'
     });
 
 
