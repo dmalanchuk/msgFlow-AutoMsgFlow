@@ -4,3 +4,4 @@
 __pycache__/
 *.pyc
 nginx.conf
+docker-compose.yml
