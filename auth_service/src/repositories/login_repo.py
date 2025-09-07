@@ -12,7 +12,7 @@ class LoginRepo:
         if not user:
             raise HTTPException(status_code=401, detail="User not found")
 
-        if not verify_password(password, user.password):
+        if not await verify_password(password, user.password):
             raise HTTPException(status_code=401, detail="Incorrect password")
 
         return user
