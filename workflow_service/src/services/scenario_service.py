@@ -8,11 +8,11 @@ from src.utils.get_chat_id import get_chat_id
 from src.utils.get_user_email import get_user_email
 
 from src.models.scenarios_model import ScenariosModel, EventsModel, ConditionsModel, ActionsModel
-from src.schemas.scenario_schema import ScenarioCreate, ScenarioUpdate, EventCreate, ConditionCreate, ActionCreate
+from src.schemas.scenario_schema import ScenarioCreate, EventCreate, ConditionCreate, ActionCreate
 from src.schemas.scenario_redis_schema import ScenarioRedisGet
 
 from src.repositories.scenario_repo import (
-    create_scenario_repo, del_by_name, update_by_name, get_scenarios_all
+    create_scenario_repo, del_by_name, get_scenarios_all
 )
 from src.redis.redis_service import (
     set_raw, get_raw,
@@ -104,7 +104,7 @@ async def delete_scenario_service(name: str, owner_email: EmailStr, session: Asy
 async def update_scenario_patch(
         name: str,
         owner_email: EmailStr,
-        body: ScenarioUpdate,
+        body,
         session: AsyncSession
 ):
     async with session.begin():
