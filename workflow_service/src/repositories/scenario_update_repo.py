@@ -1,7 +1,6 @@
 from pydantic import EmailStr
 
 from src.models.scenarios_model import ScenariosModel, EventsModel
-from src.schemas.scenario_update_schema import UpdateEvent
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, update, select
