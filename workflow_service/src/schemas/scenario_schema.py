@@ -62,11 +62,3 @@ class ScenarioCreate(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-class ScenarioUpdate(BaseModel):
-    name: Optional[str] = None
-    chat_url: Optional[str] = None
-    event: Optional[list[EventCreate]] = None
-    conditions: Optional[list[ConditionCreate]] = None
-    actions: Optional[list[ActionCreate]] = None
