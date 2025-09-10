@@ -1,9 +1,11 @@
+from typing import Literal
+
 from fastapi import HTTPException
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.repositories.scenario_update_repo import update_scenario, update_eca
-from src.schemas.scenario_update_schema import UpdateScenario, UpdateEvent
+from src.repositories.scenario_update_repo import update_scenario, update_scenario_component
+from src.schemas.scenario_update_schema import UpdateScenario
 
 
 async def update_scenario_service(
@@ -26,11 +28,12 @@ async def update_scenario_service(
     return {"msg": "Scenario updated"}
 
 
-async def update_eca_service(
+async def update_scenario_component_service(
         name: str,
         email: EmailStr,
-        body: UpdateEvent,
-        session: AsyncSession
+        body: BaseModel,
+        session: AsyncSession,
+        mode: Literal["events", "conditions", "actions"]
 ):
     body = body.model_dump(exclude_none=True)
 
@@ -39,7 +42,7 @@ async def update_eca_service(
             status_code=400, detail="Invalid request. Body cannot be empty"
         )
 
-    scenario = await update_eca(name, email, body, session)
+    scenario = await update_scenario_component(name, email, session, body, mode)
     if not scenario:
         raise HTTPException(status_code=404, detail="Scenario not found")
 
