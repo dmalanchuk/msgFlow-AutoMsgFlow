@@ -14,14 +14,14 @@ class UpdateScenario(BaseModel):
 
 class UpdateEvent(BaseModel):
     type: Optional[Literal["message_received"]] = None
-    source: Optional[Literal["telegram"]] = None
+    source: Optional[Literal["telegram", "discord"]] = None
 
     class Config:
         from_attributes = True
 
 
 class UpdateCondition(BaseModel):
-    type: Optional[Literal["contains_word"]] = None
+    type: Optional[Literal["contains_word", "equals"]] = None
     params: Optional[ParamsContainsWord] = None
 
     class Config:
