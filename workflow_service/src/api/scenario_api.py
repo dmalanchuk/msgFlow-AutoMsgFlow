@@ -16,7 +16,7 @@ from src.services.scenario_service import (
     get_scenarios_service
 )
 
-from src.services.scenario_update_service import update_scenario_service, update_eca_service
+from src.services.scenario_update_service import update_scenario_service, update_scenario_component_service
 
 router = APIRouter(prefix="/scenarios")
 
@@ -101,7 +101,7 @@ async def update_events(
         owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await update_eca_service(name, owner_email, body, session, mode="events")
+    return await update_scenario_component_service(name, owner_email, body, session, mode="events")
 
 
 @router.patch(
@@ -120,7 +120,7 @@ async def update_conditions(
         owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await update_eca_service(name, owner_email, body, session, mode="conditions")
+    return await update_scenario_component_service(name, owner_email, body, session, mode="conditions")
 
 
 @router.patch(
@@ -139,7 +139,7 @@ async def update_actions(
         owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await update_eca_service(name, owner_email, body, session, mode="actions")
+    return await update_scenario_component_service(name, owner_email, body, session, mode="actions")
 
 
 @router.get(
