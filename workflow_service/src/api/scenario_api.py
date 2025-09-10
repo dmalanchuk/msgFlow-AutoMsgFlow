@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
 from src.schemas.scenario_schema import ScenarioCreate
-from src.schemas.scenario_update_schema import UpdateScenario, UpdateEvent
+from src.schemas.scenario_update_schema import UpdateScenario, UpdateEvent, UpdateCondition, UpdateAction
 
 from src.metadata.scenario_metadata import ACTIONS_METADATA, CONDITIONS_METADATA
 from src.utils.get_user_email import get_user_email
@@ -86,7 +86,7 @@ async def update_param_by_name(
 
 
 @router.patch(
-    "/{name}/event",
+    "/{name}/events",
     summary="Update scenario by name",
     description="With this endpoint you can update some params by the name of your script",
     status_code=200,
@@ -95,13 +95,51 @@ async def update_param_by_name(
         404: {"description": "Scenario not found"}
     },
 )
-async def update_event(
+async def update_events(
         name: str,
         body: UpdateEvent,
         owner_email: EmailStr = Depends(get_user_email),
         session: AsyncSession = Depends(get_session)
 ):
-    return await update_eca_service(name, owner_email, body, session)
+    return await update_eca_service(name, owner_email, body, session, mode="events")
+
+
+@router.patch(
+    "/{name}/conditions",
+    summary="Update scenario by name",
+    description="With this endpoint you can update some params by the name of your script",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario updated successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def update_conditions(
+        name: str,
+        body: UpdateCondition,
+        owner_email: EmailStr = Depends(get_user_email),
+        session: AsyncSession = Depends(get_session)
+):
+    return await update_eca_service(name, owner_email, body, session, mode="conditions")
+
+
+@router.patch(
+    "/{name}/actions",
+    summary="Update scenario by name",
+    description="With this endpoint you can update some params by the name of your script",
+    status_code=200,
+    responses={
+        200: {"description": "Scenario updated successfully"},
+        404: {"description": "Scenario not found"}
+    },
+)
+async def update_actions(
+        name: str,
+        body: UpdateAction,
+        owner_email: EmailStr = Depends(get_user_email),
+        session: AsyncSession = Depends(get_session)
+):
+    return await update_eca_service(name, owner_email, body, session, mode="actions")
 
 
 @router.get(
