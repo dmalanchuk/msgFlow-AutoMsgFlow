@@ -1,94 +1,90 @@
 services:
-
-#  redis:
-#    image: redis:7
-#    container_name: redis_container
-#    ports:
-#      - "6379:6379"
-#    restart: unless-stopped
-#
-#  rabbitmq:
-#    image: rabbitmq:3-management
-#    container_name: rabbitmq_container
-#    ports:
-#      - "5672:5672"
-#      - "15672:15672"
-#    environment:
-#      RABBITMQ_DEFAULT_USER: guest
-#      RABBITMQ_DEFAULT_PASS: guest
-#    restart: unless-stopped
-#
-#  ngrok:
-#    image: ngrok/ngrok:latest
-#    container_name: ngrok_integration_proxy
-#    command: http integration_service:8002
-#    env_file:
-#      - .env
-#    environment:
-#      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
-#      NGROK_EDGE: worthy-civet-smart.ngrok-free.app
-#    restart: unless-stopped
-
-  auth_service:
-    container_name: auth_service_container
-    build: ./auth_service
-    ports:
-      - "8001:8000"
-    env_file:
-      - .env
-    depends_on:
-      - db
-    restart: unless-stopped
-
-  integration_service:
-    container_name: integration_service_container
-    build: ./integration_service
-    ports:
-      - "8002:8000"
-    env_file:
-      - .env
-    depends_on:
-      - rabbitmq
-      - redis
-      - db
-    restart: unless-stopped
-
-  workflow_service:
-    container_name: workflow_service_container
-    build: ./workflow_service
-    ports:
-      - "8003:8000"
-    env_file:
-      - .env
-    depends_on:
-      - rabbitmq
-      - redis
-      - db
-    restart: unless-stopped
-
-  api_gateway:
-    container_name: api_gateway_container
+  gateway:
     build: ./api_gateway
+    container_name: api_gateway
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./api_gateway/.env
     depends_on:
-      - auth_service
-      - integration_service
-      - workflow_service
+      - workflow
+      - auth
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers 2
     restart: unless-stopped
 
-#  db:
-#    image: postgres:17
-#    container_name: postgres
-#    restart: always
+  workflow:
+    build: ./workflow_service
+    container_name: workflow_service
+    env_file:
+      - ./workflow_service/.env
+    depends_on:
+      - postgres_workflow
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8003 --workers 2
+    restart: unless-stopped
+
+#  api2:
+#    build: ./workflow_service
+#    container_name: workflow_service_second
 #    env_file:
-#      - .env
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
+#      - ./workflow_service/.env
+#    depends_on:
+#      - postgres_workflow
+#    command: uvicorn src.main:app --host 0.0.0.0 --port 8004 --workers 2
+#    restart: unless-stopped
 #
-#volumes:
-#  postgres_data:
+#  api3:
+#    build: ./workflow_service
+#    container_name: workflow_service_third
+#    env_file:
+#      - ./workflow_service/.env
+#    depends_on:
+#      - postgres_workflow
+#    command: uvicorn src.main:app --host 0.0.0.0 --port 8005 --workers 2
+#    restart: unless-stopped
+
+  auth:
+    build: ./auth_service
+    container_name: auth_service
+    env_file:
+      - ./auth_service/.env
+    depends_on:
+      - postgres_auth
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8001 --workers 2
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+  postgres_auth:
+    image: postgres:17
+    container_name: postgres_auth
+    restart: unless-stopped
+    env_file:
+      - ./auth_service/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+
+  postgres_workflow:
+    image: postgres:17
+    container_name: postgres_workflow
+    restart: unless-stopped
+    env_file:
+      - ./workflow_service/.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_workflow:/var/lib/postgresql/data
+
+volumes:
+  pgdata_auth:
+  pgdata_workflow:

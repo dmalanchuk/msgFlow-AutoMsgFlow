@@ -3,5 +3,6 @@ uvicorn
 
 pydantic
 pydantic-settings
+python-jose[cryptography]
 
 aio-pika
