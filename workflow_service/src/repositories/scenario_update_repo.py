@@ -1,4 +1,4 @@
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 from src.models.scenarios_model import ScenariosModel, EventsModel
 
@@ -22,7 +22,7 @@ async def update_scenario(name: str, email: EmailStr, values: dict, session: Asy
 async def update_eca(
         name: str,
         email: EmailStr,
-        values: dict,
+        values: BaseModel,
         session: AsyncSession
 ):
     async with session.begin():
