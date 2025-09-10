@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import and_, update, select
 
 
-async def update_scenario(name: str, email: EmailStr, values: dict, session: AsyncSession):
+async def update_scenario(name: str, email: EmailStr, values: BaseModel, session: AsyncSession):
     async with session.begin():
         query = await session.execute(
             update(ScenariosModel).values(**values).where(
