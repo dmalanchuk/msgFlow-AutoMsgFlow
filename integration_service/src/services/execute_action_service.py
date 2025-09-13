@@ -22,7 +22,6 @@ class ExecuteActionService:
                 logger.error(f"Incorrect json in redis for chat_id{chat_id}")
                 return
 
-
         action_type = action.get("type")
         params = action.get("params", {})
 
