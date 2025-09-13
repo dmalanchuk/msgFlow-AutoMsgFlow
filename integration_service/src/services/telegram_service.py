@@ -2,6 +2,7 @@ from typing import Any
 from src.logger import logger
 
 
+# needs full refactoring
 class TelegramService:
 
     @staticmethod
@@ -18,7 +19,8 @@ class TelegramService:
             "pre_checkout_query",
             "poll",
             "poll_answer",
-            "my_chat_member",
+            "new_chat_member",
+            "left_chat_member",
             "chat_member",
             "chat_join_request"
         ]:
