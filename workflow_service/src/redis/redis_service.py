@@ -8,8 +8,7 @@ from src.utils.make_safe_mail import make_chat_key
 
 # saved last updates and messages
 async def save_update(email: EmailStr, update: SaveUpdate):
-    safe_email = make_chat_key(email)
-    key = f"chat:{safe_email}:updates"
+    key = make_chat_key(email)
     await redis.rpush(key, update.model_dump_json())
     await redis.expire(key, 500)  # 86400
 
@@ -58,8 +57,8 @@ async def get_last_messages(chat_id: int, limit: int = 1):
     return [json.loads(m) for m in messages]
 
 
-async def get_last_updates(chat_id: int, limit: int = 1):
-    key = f"chat:{chat_id}:updates"
+async def get_last_updates(email: EmailStr, limit: int = 1):
+    key = make_chat_key(email)
     updates = await redis.lrange(key, -limit, -1)
     return [json.loads(update) for update in updates]
 
