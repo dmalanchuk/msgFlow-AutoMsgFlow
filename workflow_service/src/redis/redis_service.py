@@ -2,12 +2,12 @@ import json
 from pydantic import EmailStr
 
 from src.redis.client_redis import redis
-from src.schemas.event_schema import UpdateRaw
+from src.schemas.event_schema import SaveUpdate
 from src.utils.make_safe_mail import make_chat_key
 
 
 # saved last updates and messages
-async def save_update(email: EmailStr, update: UpdateRaw):
+async def save_update(email: EmailStr, update: SaveUpdate):
     safe_email = make_chat_key(email)
     key = f"chat:{safe_email}:updates"
     await redis.rpush(key, update.model_dump_json())
