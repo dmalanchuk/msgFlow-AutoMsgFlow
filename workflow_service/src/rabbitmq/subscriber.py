@@ -1,5 +1,5 @@
 from src.rabbitmq.broker import broker
-from src.schemas.event_schema import UpdateRaw
+from src.schemas.event_schema import SaveUpdate
 
 from src.config import settings
 from src.logger import logger
@@ -27,7 +27,7 @@ async def handle_incoming_message_telegram(message: dict):
                 or raw_update.get("message", {}).get("text")
         )  # text from a message sent in a chat
 
-        new_update = UpdateRaw(
+        new_update = SaveUpdate(
             event_type=event_type,
             chat_id=chat_id,
             source=source,
