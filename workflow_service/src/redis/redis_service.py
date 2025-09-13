@@ -2,7 +2,7 @@ import json
 from pydantic import EmailStr
 
 from src.redis.client_redis import redis
-from src.schemas.event_schema import SaveUpdate
+from src.schemas.event_redis_schema import SaveUpdate
 from src.utils.make_safe_mail import make_chat_key
 
 

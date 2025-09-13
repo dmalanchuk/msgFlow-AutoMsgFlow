@@ -1,5 +1,5 @@
 from src.rabbitmq.broker import broker
-from src.schemas.event_schema import SaveUpdate
+from src.schemas.event_redis_schema import SaveUpdate
 
 from src.config import settings
 from src.logger import logger
