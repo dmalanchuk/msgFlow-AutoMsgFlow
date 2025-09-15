@@ -10,7 +10,7 @@ class ExecuteActionService:
     @staticmethod
     async def execute_action(chat_id: int, action: dict | None = None):
         if action is None:
-            redis_key = f"chat:{chat_id}:action"
+            redis_key = f"chat:{chat_id}:actions"
             action_raw = await redis.lindex(redis_key, 0)
             if not action_raw:
                 logger.warning(f"No action found in Redis for chat_id{chat_id}")
