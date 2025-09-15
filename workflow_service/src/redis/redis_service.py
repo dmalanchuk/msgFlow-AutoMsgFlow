@@ -38,8 +38,8 @@ async def save_action(chat_id: int, message_id: int, action: dict):
     await redis.expire(key, 500)
 
 
-async def get_message_by_id(chat_id: int, message_id: int):
-    key = f"chat:{chat_id}:messages"
+async def get_message_by_id(email: EmailStr, message_id: int):
+    key = make_chat_key(email)
     messages = await redis.lrange(key, 0, -1)
 
     found = None
@@ -50,11 +50,11 @@ async def get_message_by_id(chat_id: int, message_id: int):
     return found
 
 
-# get last update and message
-async def get_last_messages(chat_id: int, limit: int = 1):
-    key = f"chat:{chat_id}:messages"
-    messages = await redis.lrange(key, -limit, -1)
-    return [json.loads(m) for m in messages]
+# # get last update and message
+# async def get_last_messages(chat_id: int, limit: int = 1):
+#     key = f"chat:{chat_id}:messages"
+#     messages = await redis.lrange(key, -limit, -1)
+#     return [json.loads(m) for m in messages]
 
 
 async def get_last_updates(email: EmailStr, limit: int = 1):
