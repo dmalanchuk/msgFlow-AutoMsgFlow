@@ -4,7 +4,7 @@ from src.schemas.scenario_schema import ParamsSendMessage
 
 class ActionsRedis(BaseModel):
     index: int
-    email: EmailStr
+    chat_id: int
     message_id: int
     type: str
     params: ParamsSendMessage
