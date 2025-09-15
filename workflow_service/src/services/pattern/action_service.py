@@ -10,22 +10,7 @@ from src.schemas.actions_redis_schema import ActionsRedis
 from src.services.pattern.condition_service import check_conditions_for_scenario
 
 
-# async def send_action_from_scenario(chat_id: int, session: AsyncSession):
-#     result = await check_conditions(chat_id, session)
-#
-#     if result:
-#         actions = await get_scenario(chat_id, session)
-#
-#         for action in actions:
-#             await publish_action(action.actions)
-#             return {"msg": "Action sent", "action": action.actions}
-#     else:
-#         logger.info(f"Conditions false for chat_id={chat_id}")
-#         return {"msg": "conditions false"}
-#
-#     return None
-
-
+# needs add check_conditions
 async def execute_actions(chat_id: int, message_id: int, session: AsyncSession):
     scenarios = await get_scenarios_all_by_chat_id(chat_id, session)
     if not scenarios:
