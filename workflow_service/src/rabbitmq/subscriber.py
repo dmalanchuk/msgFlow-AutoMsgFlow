@@ -40,8 +40,8 @@ async def handle_incoming_message_telegram(message: dict):
         await save_update(chat_id, new_update)
         logger.info(f"Update saved in Redis for chat: {new_update}")
 
-        # async with async_session() as session:
-        #     await execute_actions(email, msg_id, session)
+        async with async_session() as session:
+            await execute_actions(chat_id, msg_id, session)
 
     except Exception as e:
         logger.exception(f"Error saving message in Redis: {e}")
