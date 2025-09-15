@@ -1,3 +1,4 @@
+from src.database import async_session
 from src.rabbitmq.broker import broker
 from src.schemas.event_redis_schema import SaveUpdate
 
@@ -5,6 +6,7 @@ from src.config import settings
 from src.logger import logger
 
 from src.redis.redis_service import save_update
+from src.services.pattern.action_service import execute_actions
 
 
 @broker.subscriber(settings.QUEUE_NAME)
@@ -38,11 +40,8 @@ async def handle_incoming_message_telegram(message: dict):
         await save_update(chat_id, new_update)
         logger.info(f"Update saved in Redis for chat: {new_update}")
 
-        # if text:
-        #     await save_message(chat_id, text, msg_id, source, event_type)
-        #     logger.info(f"Update saved in Redis for chat: {chat_id}")
-
-        # await ExecuteAction.execute_actions(chat_id, msg_id)
+        # async with async_session() as session:
+        #     await execute_actions(email, msg_id, session)
 
     except Exception as e:
         logger.exception(f"Error saving message in Redis: {e}")
