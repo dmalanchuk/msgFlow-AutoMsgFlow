@@ -10,10 +10,9 @@ from src.repositories.scenario_repo import get_scenarios_all
 async def check_event(
         email: EmailStr,
         session: AsyncSession
-):
+) -> bool | None:
     try:
         updates = await get_last_updates(email, limit=1)
-        event_matched = False
 
         if not updates:
             logger.info(f"No updates found for email: {email}")
@@ -22,11 +21,10 @@ async def check_event(
         scenarios = await get_scenarios_all(email, session)
         for scenario in scenarios:
             if scenario.event.event_type == updates[0].event_type:
-                event_matched = True
-                return event_matched
+                return True
 
-        return event_matched
+        return False
 
     except Exception as e:
-        logger.exception(f"Failed to check event for email={email}")
-        return {"msg": "Internal error", "error": str(e)}
+        logger.exception(f"Failed to check event for email={email}, error={e}")
+        return False
