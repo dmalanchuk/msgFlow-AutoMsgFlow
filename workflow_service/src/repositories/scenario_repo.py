@@ -13,11 +13,26 @@ async def get_scenario_chat_id(chat_id: int, session: AsyncSession):
     return result.scalars().all()
 
 
-# get all scenarios
+# get all scenarios by email for endpoint
 async def get_scenarios_all(email: EmailStr, session: AsyncSession):
     result = await session.execute(
         select(ScenariosModel).where(
             ScenariosModel.owner_email == email
+        )
+        .options(
+            selectinload(ScenariosModel.events),
+            selectinload(ScenariosModel.conditions),
+            selectinload(ScenariosModel.actions),
+        )
+    )
+    return result.scalars().all()
+
+
+# duplicate of get_scenarios_all_by_chat_id for execute a scenario
+async def get_scenarios_all_by_chat_id(chat_id: int, session: AsyncSession):
+    result = await session.execute(
+        select(ScenariosModel).where(
+            ScenariosModel.chat_id == chat_id
         )
         .options(
             selectinload(ScenariosModel.events),
