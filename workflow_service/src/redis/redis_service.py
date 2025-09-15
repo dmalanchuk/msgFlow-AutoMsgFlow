@@ -1,10 +1,8 @@
 import json
-from pydantic import EmailStr
 
 from src.redis.client_redis import redis
 from src.schemas.event_redis_schema import SaveUpdate
 from src.schemas.actions_redis_schema import ActionsRedis
-from src.utils.make_safe_mail import make_chat_key
 
 
 # saved last updates and messages
