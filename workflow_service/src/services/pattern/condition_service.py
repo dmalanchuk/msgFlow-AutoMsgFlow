@@ -1,46 +1,13 @@
 import json
 import re
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.database import async_session
-from src.repositories.scenario_repo import get_scenarios_all_by_chat_id
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.logger import logger
-from src.redis.redis_service import get_message_by_id, get_last_updates
+from src.redis.redis_service import get_message_by_id
 from src.services.pattern.event_service import check_event
 
 
-# async def check_conditions(
-#         chat_id: int,
-#         session: AsyncSession
-# ) -> bool:
-#
-#     result = await check_event(chat_id, session)
-#
-#     if not result:
-#         logger.info(f"Event not matched for chat_id={chat_id}")
-#         return False
-#
-#     text = await get_last_updates(chat_id)
-#
-#     if not text:
-#         logger.warning(f"No messages found in Redis for chat_id={chat_id}")
-#         return False
-#     last_message = text[0]
-#
-#     conditions = await get_scenarios_all_by_chat_id(chat_id, session)
-#
-#     if result and last_message.get("text"):
-#         for condition in conditions:
-#             conditions_dict = condition.get("conditions") or {}
-#             params = conditions_dict.get("params") or {}
-#             word = params.get("word")
-#
-#             if word and word in last_message["text"]:
-#                 return True
-#
-#     return False
-
-
+# needs add check_event
 async def check_conditions_for_scenario(
         scenario,
         chat_id: int,
