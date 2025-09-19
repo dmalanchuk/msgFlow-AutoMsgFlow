@@ -1,7 +1,7 @@
 import json
 import re
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from src.database import async_session
 from src.logger import logger
 from src.redis.redis_service import get_message_by_id
 from src.services.pattern.event_service import check_event
@@ -13,8 +13,13 @@ async def check_conditions_for_scenario(
         chat_id: int,
         message_id: int
 ) -> bool:
-    # Get last message in Redis
-    messages = await get_message_by_id(chat_id, message_id)
+    async with async_session() as session:
+        if not await check_event(chat_id, session):
+            logger.info(f"Event not matched for chat_id={chat_id}")
+            return False
+
+        messages = await get_message_by_id(chat_id, message_id)
+
     if not messages:
         logger.warning(f"No message in Redis for chat_id={chat_id}, message_id={message_id}")
         return False
