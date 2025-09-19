@@ -1,4 +1,3 @@
-from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.rabbitmq.publisher import publish_action
 from src.logger import logger
@@ -10,7 +9,6 @@ from src.schemas.actions_redis_schema import ActionsRedis
 from src.services.pattern.condition_service import check_conditions_for_scenario
 
 
-# needs add check_conditions
 async def execute_actions(chat_id: int, message_id: int, session: AsyncSession):
     scenarios = await get_scenarios_all_by_chat_id(chat_id, session)
     if not scenarios:
