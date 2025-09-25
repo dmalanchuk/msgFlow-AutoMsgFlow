@@ -1,41 +1,39 @@
-from src.redis.client_redis import redis
 import json
+
+from src.redis.client_redis import redis
+from src.schemas.event_redis_schema import SaveUpdate
+from src.schemas.actions_redis_schema import ActionsRedis
 
 
 # saved last updates and messages
-async def save_update(chat_id: int, update: dict):
+async def save_update(chat_id: int, update: SaveUpdate):
     key = f"chat:{chat_id}:updates"
-    await redis.rpush(key, json.dumps(update))
+    await redis.rpush(key, update.model_dump_json())
     await redis.expire(key, 500)  # 86400
 
 
-async def save_message(chat_id: int, text: str, msg_id: int, source: str, event_type: str):
-    key = f"chat:{chat_id}:messages"
-    await redis.rpush(key, json.dumps(
-        {
-            "source": source,
-            "event_type": event_type,
-            "text": text,
-            "message_id": msg_id
-        }
-    ))
-    await redis.expire(key, 500)  # 86400
+# async def save_message(chat_id: int, text: str, msg_id: int, source: str, event_type: str):
+#     key = f"chat:{chat_id}:messages"
+#     await redis.rpush(key, json.dumps(
+#         {
+#             "source": source,
+#             "event_type": event_type,
+#             "text": text,
+#             "message_id": msg_id
+#         }
+#     ))
+#     await redis.expire(key, 500)  # 86400
 
 
 # Save action in Redis
-async def save_action(chat_id: int, message_id: int, action: dict):
-    key = f"chat:{chat_id}:action"
-    payload = {
-        "chat_id": chat_id,
-        "message_id": message_id,
-        "action": action
-    }
-    await redis.lpush(key, json.dumps(payload))
+async def save_action(chat_id: int, action: ActionsRedis):
+    key = f"chat:{chat_id}:actions"
+    await redis.lpush(key, action.model_dump_json())
     await redis.expire(key, 500)
 
 
 async def get_message_by_id(chat_id: int, message_id: int):
-    key = f"chat:{chat_id}:messages"
+    key = f"chat:{chat_id}:updates"
     messages = await redis.lrange(key, 0, -1)
 
     found = None
@@ -46,11 +44,11 @@ async def get_message_by_id(chat_id: int, message_id: int):
     return found
 
 
-# get last update and message
-async def get_last_messages(chat_id: int, limit: int = 1):
-    key = f"chat:{chat_id}:messages"
-    messages = await redis.lrange(key, -limit, -1)
-    return [json.loads(m) for m in messages]
+# # get last update and message
+# async def get_last_messages(chat_id: int, limit: int = 1):
+#     key = f"chat:{chat_id}:messages"
+#     messages = await redis.lrange(key, -limit, -1)
+#     return [json.loads(m) for m in messages]
 
 
 async def get_last_updates(chat_id: int, limit: int = 1):

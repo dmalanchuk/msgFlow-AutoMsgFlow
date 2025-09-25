@@ -1,75 +1,34 @@
+from src.repositories.scenario_repo import get_scenarios_all_by_chat_id
 from src.logger import logger
-
-from src.schemas.event_schema import Event
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.redis.redis_service import get_last_updates
 
-class EventService:
-    async def check_event(
-            self,
-            chat_id: int
-    ):
-        try:
-            updates = await self.redis_service.get_last_updates(chat_id, limit=1)
 
-            if not updates:
-                logger.info(f"No updates found for chat: {chat_id}")
-                return None
+async def check_event(
+        chat_id: int,
+        session: AsyncSession
+) -> bool | None:
+    try:
+        updates = await get_last_updates(chat_id, limit=1)
 
-            return self._parse_update(updates[0])
+        if not updates:
+            logger.info(f"No updates found for chat_id: {chat_id}")
+            return None
 
-        except Exception as e:
-            logger.exception(f"Failed to check event for chat_id={chat_id}")
-            return {"msg": "Internal error", "error": str(e)}
+        last_update = updates[0]
+        event_type = last_update.get("event_type")
 
-    @staticmethod
-    def _parse_update(update: dict):
-        try:
-            event = list(update)[1]
-            message = update.get("message") or update.get("edited_message") or {}
-            chat_data = message.get("chat", {})
-            chat_id = chat_data.get("id")
+        scenarios = await get_scenarios_all_by_chat_id(chat_id, session)
 
-            if not chat_id:
-                raise ValueError("chat_id is missing")
+        for scenario in scenarios:
+            for event in scenario.events:
+                if event.type == event_type:
+                    logger.info(f"Matched event for chat_id={chat_id}, event_type={last_update.event_type}")
+                    return True
 
-            event_type = EventService._detect_event_type(message, event)
+        return False
 
-            event_payload = Event(event_type=event_type, chat_id=chat_id)
-            return event_payload.model_dump()
-
-        except Exception as e:
-            logger.warning(f"Invalid update format: {e}, update={update}")
-            return {"msg": "Internal event", "error": str(e)}
-
-    @staticmethod
-    def _detect_event_type(message: dict, event: str) -> str:
-        if "new_chat_member" in message:
-            return "new_chat_member"
-        elif "left_chat_member" in message:
-            return "left_chat_member"
-
-        return event
-
-    async def is_event_matched(
-            self,
-            chat_id: int,
-            session: AsyncSession
-    ):
-        """in params used dependency injection (DI)"""
-        scenario_list = await self.scenario_service.get_scenarios(chat_id, session)
-        event = await self.check_event(chat_id)
-
-        if not event:
-            return False
-
-        incoming_event_type = event.get("event_type")
-        if not incoming_event_type:
-            return False
-
-        for scenario in scenario_list:
-            if scenario.get("event")["type"] == incoming_event_type:
-                return True
-
+    except Exception as e:
+        logger.exception(f"Failed to check event for chat_id={chat_id}, error={e}")
         return False
