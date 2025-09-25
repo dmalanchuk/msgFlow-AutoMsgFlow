@@ -13,12 +13,12 @@ async def check_conditions_for_scenario(
         chat_id: int,
         message_id: int
 ) -> bool:
-    async with async_session() as session:
-        if not await check_event(chat_id, session):
-            logger.info(f"Event not matched for chat_id={chat_id}")
-            return False
+    # async with async_session() as session:
+    #     if not await check_event(chat_id, session):
+    #         logger.info(f"Event not matched for chat_id={chat_id}")
+    #         return False
 
-        messages = await get_message_by_id(chat_id, message_id)
+    messages = await get_message_by_id(chat_id, message_id)
 
     if not messages:
         logger.warning(f"No message in Redis for chat_id={chat_id}, message_id={message_id}")
