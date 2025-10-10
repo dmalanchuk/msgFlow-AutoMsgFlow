@@ -6,7 +6,7 @@ from src.config import settings
 from src.logger import logger
 
 from src.redis.redis_service import save_update
-from src.services.pattern.action_service import execute_actions
+from src.pattern.action_service import execute_actions
 
 
 @broker.subscriber(settings.QUEUE_NAME)
