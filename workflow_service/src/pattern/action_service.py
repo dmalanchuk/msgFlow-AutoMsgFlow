@@ -6,7 +6,7 @@ from src.repositories.scenario_repo import get_scenarios_all_by_chat_id
 
 from src.redis.redis_service import save_action
 from src.schemas.actions_redis_schema import ActionsRedis
-from src.services.pattern.condition_service import check_conditions_for_scenario
+from src.pattern.condition_service import check_conditions_for_scenario
 
 
 async def execute_actions(chat_id: int, message_id: int, session: AsyncSession):

@@ -4,7 +4,7 @@ import re
 from src.database import async_session
 from src.logger import logger
 from src.redis.redis_service import get_message_by_id
-from src.services.pattern.event_service import check_event
+from src.pattern.event_service import check_event
 
 
 # needs add check_event
